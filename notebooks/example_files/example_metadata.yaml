@@ -1,0 +1,35 @@
+device:
+  description: Behnke Fried Micro Inner Wire Bundle
+  manufacturer: Ad-Tech Medical
+  name: Microwire Electrodes
+electrode:
+  description: Behnke Fried/Micro Inner Wire Bundle.
+  filtering: XX
+  impedence: XX
+  location: XX
+  name: XX
+  position: XX, XX, XX
+  reference: XX
+events: null
+study:
+  data_collection: XX
+  experiment_description: XX
+  experimenter: XX
+  identifier: XX
+  institution: Columbia University
+  lab: Electrophysiology, Memory, and Navigation Laboratory
+  session_description: XX
+  session_id: XX
+  session_start_time: 1111/11/11
+subject:
+  age: XX
+  description: XX
+  sex: XX
+  species: human
+task:
+  description: XX
+  events_description: XX
+  name: T3
+  revision_date: XX
+  run_platform: Unity
+  task_run_version: XX
