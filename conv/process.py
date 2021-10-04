@@ -5,7 +5,7 @@ import numpy as np
 from spiketools.spatial.position import compute_speed
 
 # Import local code
-from conv.measures import compute_linear_position, compute_error
+from conv.measures import compute_error
 from conv.timestamps import align_times
 
 ###################################################################################################
@@ -71,7 +71,7 @@ def process_location_info(task):
     return task
 
 
-def process_error_info(task, ...):
+def process_error_info(task):
     """Process per trial error related information."""
 
     ...

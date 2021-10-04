@@ -45,7 +45,6 @@ def parse_lines_logfile(file_path, task=None):
 
     # Define flags, with start values, for tracking current status
     flags = {'task_phase': {...},
-             ...
              }
 
     # Running counters of task information
