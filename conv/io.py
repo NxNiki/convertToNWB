@@ -104,7 +104,7 @@ def make_file_list(files):
 def load_config(file_name, folder=None):
     """Load an individual config file."""
 
-    with open(check_folder(file_name, folder), 'r') as fobj:
+    with open(check_ext(check_folder(file_name, folder), '.yaml'), 'r') as fobj:
         data = yaml.safe_load(fobj)
 
     return data
