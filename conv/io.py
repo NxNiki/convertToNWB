@@ -8,6 +8,64 @@ import yaml
 ###################################################################################################
 ###################################################################################################
 
+### FILE UTILITIES
+
+def check_ext(file_name, ext):
+    """Check the extension for a file name, and add if missing.
+
+    Parameters
+    ----------
+    file_name : str
+        The name of the file.
+    ext : str
+        The extension to check and add.
+
+    Returns
+    -------
+    str
+        File name with the extension added.
+    """
+
+    return file_name + ext if not file_name.endswith(ext) else file_name
+
+
+def check_folder(file_name, folder):
+    """Check a file name, adding folder path if needed.
+
+    Parameters
+    ----------
+    file_name : str
+        The name of the file.
+    folder : str or Path, optional
+        Folder location of the file.
+
+    Returns
+    -------
+    str
+        Full path of the file.
+    """
+
+    return os.path.join(folder, file_name) if folder else file_name
+
+
+def drop_hidden_files(files):
+    """Clean hidden files from a list of files."""
+
+    return [file for file in files if file[0] != '.']
+
+
+def ignore_files(files, ignore):
+    """Select files based on a search term of interest."""
+
+    return [file for file in files if ignore not in file]
+
+
+def select_files(files, search):
+    """Select files based on a search term of interest."""
+
+    return [file for file in files if search in file]
+
+
 ### GENERAL FILE I/O
 
 def get_files(folder, select=None, ignore=None, drop_hidden=True):
@@ -29,25 +87,6 @@ def get_files(folder, select=None, ignore=None, drop_hidden=True):
 
     return files
 
-
-def drop_hidden_files(files):
-    """Clean hidden files from a list of files."""
-
-    return [file for file in files if file[0] != '.']
-
-
-def ignore_files(files, ignore):
-    """Select files based on a search term of interest."""
-
-    return [file for file in files if ignore not in file]
-
-
-def select_files(files, search):
-    """Select files based on a search term of interest."""
-
-    return [file for file in files if search in file]
-
-
 #### DATA FILES
 
 def make_file_list(files):
@@ -65,8 +104,7 @@ def make_file_list(files):
 def load_config(file_name, folder=None):
     """Load an individual config file."""
 
-    file_name = os.path.join(folder, file_name) if folder else file_name
-    with open(file_name, 'r') as fobj:
+    with open(check_folder(file_name, folder), 'r') as fobj:
         data = yaml.safe_load(fobj)
 
     return data
@@ -86,8 +124,7 @@ def load_configs(files, folder=None):
 def save_config(cdict, file_name, folder=None):
     """Save out a config file."""
 
-    file_name = os.path.join(folder, file_name) if folder else file_name
-    with open(file_name + '.yaml', 'w') as file:
+    with open(check_ext(check_folder(file_name, folder), '.yaml'), 'w') as file:
         yaml.dump(cdict, file)
 
 
@@ -104,16 +141,17 @@ def save_task_object(task, file_name, folder=None):
         Name for the file to be saved out.
     folder : str or Path, optional
         Folder to save out to.
+
+    Notes
+    -----
+    Task objects are saved and loaded as pickle files.
     """
 
-    file_name = file_name + '.p' if file_name.split('.')[-1][-2:] != '.p' else file_name
-    file_path = os.path.join(folder, file_name) if folder else file_name
-
-    with open(file_path, 'wb') as file_path:
-        pickle.dump(task, file_path)
+    with open(check_ext(check_folder(file_name, folder), '.p'), 'wb') as fobj:
+        pickle.dump(task, fobj)
 
 
-def load_object(file_name, folder=None):
+def load_task_object(file_name, folder=None):
     """Load a task object.
 
     Parameters
@@ -127,12 +165,13 @@ def load_object(file_name, folder=None):
     -------
     task
         Loaded task object.
+
+    Notes
+    -----
+    Task objects are saved and loaded as pickle files.
     """
 
-    file_name = file_name + '.p' if file_name.split('.')[-1][-2:] != '.p' else file_name
-    file_path = os.path.join(folder, file_name) if folder else file_name
-
-    with open(file_path, 'rb') as load_obj:
+    with open(check_ext(check_folder(file_name, folder), '.p'), 'rb') as load_obj:
         task = pickle.load(load_obj)
 
     return task
