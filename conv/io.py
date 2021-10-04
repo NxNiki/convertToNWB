@@ -1,6 +1,7 @@
 """Utility functions for managing files."""
 
 import os
+import pickle
 
 import yaml
 
@@ -88,3 +89,50 @@ def save_config(cdict, file_name, folder=None):
     file_name = os.path.join(folder, file_name) if folder else file_name
     with open(file_name + '.yaml', 'w') as file:
         yaml.dump(cdict, file)
+
+
+### TASK OBJECTS
+
+def save_task_object(task, file_name, folder=None):
+    """Save a task object.
+
+    Parameters
+    ----------
+    task : Task
+        Task object to save out.
+    file_name : str
+        Name for the file to be saved out.
+    folder : str or Path, optional
+        Folder to save out to.
+    """
+
+    file_name = file_name + '.p' if file_name.split('.')[-1][-2:] != '.p' else file_name
+    file_path = os.path.join(folder, file_name) if folder else file_name
+
+    with open(file_path, 'wb') as file_path:
+        pickle.dump(task, file_path)
+
+
+def load_object(file_name, folder=None):
+    """Load a task object.
+
+    Parameters
+    ----------
+    file_name : str
+        File name of the object to be loaded.
+    folder : str or Path, optional
+        Folder to load from.
+
+    Returns
+    -------
+    task
+        Loaded task object.
+    """
+
+    file_name = file_name + '.p' if file_name.split('.')[-1][-2:] != '.p' else file_name
+    file_path = os.path.join(folder, file_name) if folder else file_name
+
+    with open(file_path, 'rb') as load_obj:
+        task = pickle.load(load_obj)
+
+    return task
