@@ -2,8 +2,6 @@
 
 import numpy as np
 
-from spiketools.spatial.position import compute_speed
-
 # Import local code
 from conv.measures import compute_error
 from conv.timestamps import align_times
