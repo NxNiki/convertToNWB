@@ -1,0 +1,4 @@
+numpy
+scikit-learn
+pynwb
+convnwb @ git+https://github.com/JacobsSU/convnwb.git@main
