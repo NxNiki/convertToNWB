@@ -1,7 +1,5 @@
 """Functions for parsing log files."""
 
-import pandas as pd
-
 # Import local code
 from conv.task import Task
 from conv.process import (process_time_info, process_task_info, process_position_info,
