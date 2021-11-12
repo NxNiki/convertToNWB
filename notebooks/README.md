@@ -14,6 +14,6 @@ This notebook steps through converting T3 data to NWB.
 
 This notebook runs the processes the convert data to NWB.
 
-### 03-ExploreData
+### A1-ExploreData
 
-This notebook checks and explores the dataset.
+An additional notebook for checking and exploring data files.
