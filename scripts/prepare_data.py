@@ -18,7 +18,8 @@ def prepare_data(SUBJ=SUBJ, SETTINGS=SETTINGS, PATHS=PATHS):
     """Prepare a session of data for NWB conversion."""
 
     if SETTINGS['VERBOSE']:
-        print('Preparing data for {}'.format(SUBJ['ID']))
+        print('Preparing data for {}-{}'.format(\
+            SUBJ['ID'], SUBJ['ID'], SUBJ['SESSION']))
 
     ## PARSE LOG FILE
 
@@ -29,9 +30,8 @@ def prepare_data(SUBJ=SUBJ, SETTINGS=SETTINGS, PATHS=PATHS):
 
         task = process_logfile(PATHS['BEHAVIOR'] / 'logfile.txt')
 
-        # Note: conventionalize where this gets saved
-        task_name = SUBJ['ID'] + '_' + SUBJ['SESSION'] + '_events.csv'
-        save_task_obj(PATHS['SUBJ'] / task_name)
+        # Save out parsed & preprocessed task information
+        save_task_obj(task, '_'.join([SUBJ['ID'], SUBJ['SESSION']]), PATHS['SUBJ'])
 
 
     ## COLLECT METADATA
@@ -44,10 +44,11 @@ def prepare_data(SUBJ=SUBJ, SETTINGS=SETTINGS, PATHS=PATHS):
     metadata = load_configs(metadata_files, PATHS['METADATA'])
 
     # Save out the collected config file for the session
-    save_config(metadata, SUBJ['ID'] + '_metadata', folder=PATHS['SUBJ'])
+    save_config(metadata, '_'.join([SUBJ['ID'], SUBJ['SESSION']]), folder=PATHS['SUBJ'])
 
     if SETTINGS['VERBOSE']:
-        print('Completed data preparation for {}'.format(SUBJ['ID']))
+        print('Completed data preparation for {}-{}'.format(\
+            SUBJ['ID'], SUBJ['SESSION']))
 
 
 if __name__ == '__main__':

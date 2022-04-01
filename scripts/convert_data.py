@@ -29,22 +29,43 @@ def convert_data(SUBJ=SUBJ, PATHS=PATHS, SETTINGS=SETTINGS):
     if SETTINGS['VERBOSE']:
         print('Converting data for {}'.format(SUBJ['ID']))
 
-    ## SETUP & FILE LOADING
+    ## FILE LOADING
+
+    # Load behavior data
+    task = load_task_obj('_'.join(SUBJ['ID'], SUBJ['SESSION']))
+    assert task
+
+    # Load metadata file
+    metadata = load_config(SUBJ['ID'] + '_metadata.yaml', folder=PATHS['SUBJ'])
+    assert metadata
+
+    # Get a list of the available spike files
+    spike_files = get_files(PATHS['SPIKES'], 'times_')
+    assert spike_files
+
+    # Get the list of available LFP files
+    if ADD_LFP:
+        lfp_files = get_files(PATHS['LFP'], ext='.p')
+        assert lfp_files
+
+    ## SETUP
 
     # Get current date
     current_date = datetime.now(tzlocal())
 
-    # Load behavior data
-    task = load_task_obj(SUBJ['ID'] + '_' + SUBJ['SESSION'] + '_task.p')
-
-    # Load metadata file
-    metadata = load_config(SUBJ['ID'] + '_metadata.yaml', folder=PATHS['SUBJ'])
+    # Get the session date
+    session_date = datetime.fromtimestamp(task.session['start'][0] / 1000, tz=tzlocal())
 
     # Define collection site information
     if SUBJ['ID'][::] == '':
         data_collection = 'XX'
     else:
         data_collection = 'unknown'
+
+    if SETTINGS['RESET_TIME']:
+
+        # Reset task time stamps to start at the session start time
+        task = offset_task_time(task, task.session['start'][0])
 
     ## INITIALIZE NWB FILE
 
@@ -59,7 +80,7 @@ def convert_data(SUBJ=SUBJ, PATHS=PATHS, SETTINGS=SETTINGS):
     nwbfile = NWBFile(session_description=metadata['study']['session_description'],
                       identifier=metadata['study']['identifier'],
                       file_create_date=current_date,
-                      session_start_time=current_date,
+                      session_start_time=session_date,
                       session_start_time=metadata['study']['session_start_time'],
                       experimenter=metadata['study']['experimenter'],
                       lab=metadata['study']['lab'],
@@ -167,16 +188,18 @@ def convert_data(SUBJ=SUBJ, PATHS=PATHS, SETTINGS=SETTINGS):
 
     ## UNIT DATA
 
-    # Get a list of the available spike files
-    spike_files = get_files(PATHS['SPIKES'], 'times_')
+    # Define some sorting metadata
+    description = "Spike sorting solutions - done with {} (v-{}) by {}.".format(\
+        metadata['sorting']['sorter'],
+        metadata['sorting']['version'],
+        metadata['sorting']['done_by'])
 
-    # Check that there are spike files available
-    if len(spike_files) == 0:
-        raise ValueError('No split spike time files found - cannot proceed.')
+    # Initialize the units data, with given description
+    nwbfile.units = Units('units', description=description)
 
-    # Specify additional metadata columns for units
-    nwbfile.add_unit_column('channel', 'The recording channel of this unit.')
-    nwbfile.add_unit_column('location', 'The anatomical location of this unit.')
+    # Add unit metadata columns
+    for field, description in metadata['units'].items():
+        nwbfile.add_unit_column(field, description)
 
     # Add each unit to the NWB file
     for ind, spike_file in enumerate(spike_files):
@@ -184,9 +207,9 @@ def convert_data(SUBJ=SUBJ, PATHS=PATHS, SETTINGS=SETTINGS):
         # Get channel information from file name
         channel = spike_file.split('.')[0].split('_')[-1]
 
-        # Load spike file & get spike data
-        # NOTE: currently loads HDF5 file - update as needed
+        # Load spike file & get spike data (example for HDF5 files)
         with h5py.File(PATHS['SPIKES'] / spike_file, 'r') as h5file:
+
             spike_data = h5file['spike_data_sorted']
 
             # Add unit data
@@ -203,15 +226,12 @@ def convert_data(SUBJ=SUBJ, PATHS=PATHS, SETTINGS=SETTINGS):
         # Create the electrode table
         electrode_table_region = nwbfile.create_electrode_table_region([0], 'xx')
 
-        # Get the list of available LFP files
-        lfp_files = get_files(PATHS['LFP'], ext='.p')
-
         # Add each LFP trace as a new object
         for ind, lfp_file in enumerate(lfp_files):
             with open(PATHS['LFP'] / lfp_file, 'rb') as pfile:
 
                 # Load ephys data
-                #ephys_data = load(...)
+                ephys_data = load(...)
 
                 # Create & add electrical series to store LFP data
                 ephys_ts = ElectricalSeries('field_data_' + str(ind),

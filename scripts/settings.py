@@ -22,6 +22,7 @@ SESSION = ''
 
 PARSE_LOG = True
 ADD_LFP = False
+RESET_TIME = True
 VERBOSE = True
 
 #### DEFINE BASE DATA PATH
@@ -61,6 +62,7 @@ SUBJ = {
 SETTINGS = {
     'PARSE_LOG' : PARSE_LOG,
     'ADD_LFP' : ADD_LFP,
+    'RESET_TIME' : RESET_TIME,
     'VERBOSE' : VERBOSE
 }
 
@@ -71,7 +73,7 @@ PATHS = {
     'SPIKES' : DATA_PATH / SUBJ_ID / SESSION / 'split_files',
     'LFP' : DATA_PATH / SUBJ_ID / SESSION / 'micro_lfp',
     'SYNC' : DATA_PATH / SUBJ_ID / SESSION / 'sync',
-    'METADATA' : REPO_PATH / 'metadata',
     'SAVE' : DATA_PATH / 'NWB',
+    'METADATA' : REPO_PATH / 'metadata',
     'SUBJ' : REPO_PATH / 'subject'
 }
