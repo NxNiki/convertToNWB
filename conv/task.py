@@ -3,6 +3,7 @@
 from copy import deepcopy
 
 from convnwb.plts import plot_alignment
+from convnwb.utils import offset_time, change_time_units
 
 ###################################################################################################
 ###################################################################################################
@@ -24,6 +25,13 @@ class Task(object):
             'session' : None
         }
 
+        # EXPERIMENT INFORMATION
+        self.experiment = {
+            'version' : {'label' : None, 'number' : None},
+            'language' : None,
+            'environment' : {...}
+        }
+
         # SESSION INFORMATION
         self.session = {
             'start' : None,
@@ -32,27 +40,39 @@ class Task(object):
 
         ## SYNCHRONIZATION
 
-        self.sync = {...}
+        self.sync = {
+            ...
+        }
 
         ## TASK STRUCTURE
 
         # Marker variables for particular parts of the task
-        self.phase_times = {...
+        self.phase_times = {
+            ...
         }
 
         ## TRIALS
 
         # Information on task elements (navigation / encoding / recall, etc)
-        self.trial = {...}
-        ...
+        self.trial = {
+            ...
+        }
 
         ## POSITION
 
-        self.pos = {'x' : [], 'y' : [], 'z' : []}
+        self.position = {
+            'time' : [],
+            'x' : [],
+            'y' : [],
+            'z' : []
+        }
 
         ## BEHAVIOUR
 
-        self.button = {'time' : [], 'x' : [], 'y' : [], 'z' : []}
+        self.button = {
+            # Time of button presses
+            'time' : [],
+        }
 
         ## STIMULI
 
@@ -98,8 +118,10 @@ def offset_task_time(task, offset):
     ----------
     task : Task
         Task object.
-    offset : float
-        The time value to subtract from each logged time value.
+    update : {'offset', 'change_units'}
+        Label for what kind of update to do to the timestamps.
+    kwargs
+        Additional arguments to pass to the update function.
 
     Returns
     -------
@@ -113,27 +135,30 @@ def offset_task_time(task, offset):
 
     task = deepcopy(task)
 
+    # Select update function to use
+    func = {'offset' : offset_time, 'change_units' : change_time_units}[update]
+
     # Session - session start & end times
     for attr in ['start', 'end']:
-        task.session[attr] = task.session[attr] - offset
+        task.session[field] = func(task.session[field], **kwargs)
 
     # Phase times - all attributes are timestamps
     for attr in task.phase_times.keys():
-        task.phase_times[attr] = task.phase_times[attr] - offset
+        task.phase_times[field] = func(task.phase_times[field], **kwargs)
 
     # Sync - behavioural & neural
     ...
 
-    # Timestamps: pos, rotation, button, encoding, recall, recall_selector_position
-    fields = [...]
-    for field in fields:
-        getattr(task, field)['time'] = getattr(task, field)['time'] - offset
+    # Timestamps: ...
+    for field in [...]:
+        getattr(task, field)['time'] = func(getattr(task, field)['time'], **kwargs)
 
     # Other: ...
     ...
 
     # Add information to task object about the reset
-    task.time_reset = True
-    task.time_offset = offset
+    if update == 'offset':
+        task.time_reset = True
+        task.time_offset = kwargs['offset']
 
     return task

@@ -9,8 +9,8 @@ from conv.timestamps import align_times
 ###################################################################################################
 ###################################################################################################
 
-def process_task_all(task):
-    """Process all aspects of the task information.
+def process_task(task):
+    """Process task information.
 
     Parameters
     ----------
