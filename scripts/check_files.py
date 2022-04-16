@@ -6,7 +6,7 @@ sys.path.append('..')
 from conv.io import get_files, make_file_list
 
 # Import settings
-from settings import PATHS
+from paths import DATA_PATH
 
 ###################################################################################################
 ###################################################################################################
@@ -17,15 +17,15 @@ def check_files():
     print('\n\nCHECKING AVAILABLE FILES\n')
 
     # Check list of available subjects
-    subj_files = get_files(PATHS['DATA'], ignore='NWB')
+    subj_files = get_files(DATA_PATH)
 
     # Collect the list of data files and NWB files
     sessions = {}
-    for subj in subj_files:
-        sessions[subj] = get_files(PATHS['DATA'] / subj, select='session')
+    for subj_file in subj_files:
+        sessions[subj_file] = get_files(DATA_PATH / subj_file, select='session')
 
     # Get list of converted files
-    converted = get_files(PATHS['DATA'] / 'NWB')
+    converted = get_files(DATA_PATH / 'NWB')
 
     # Check the list of available subject & sessions
     print('Available subjects & sessions:')

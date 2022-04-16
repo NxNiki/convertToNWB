@@ -1,5 +1,6 @@
 """Convert a data file to NWB."""
 
+from pathlib import Path
 from datetime import datetime
 from dateutil.tz import tzlocal
 
@@ -17,35 +18,42 @@ sys.path.append('..')
 from conv.io import get_files, load_config
 from conv.utils import clean_strings, get_event_time
 
-# Import settings
-from settings import SUBJ, PATHS, SETTINGS
+# Import settings (from local folder)
+from settings import SUBJ, SETTINGS
+from paths import Paths
 
 ###################################################################################################
 ###################################################################################################
 
-def convert_data(SUBJ=SUBJ, PATHS=PATHS, SETTINGS=SETTINGS):
+def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     """Convert a session of data to an NWB file."""
 
+    # Initialize paths
+    PATHS = Paths(SUBJ['ID'], SUBJ['SESSION'])
+
+    # Define the session ID
+    session_id = '_'.join([SUBJ['ID'], SUBJ['SESSION']])
+
     if SETTINGS['VERBOSE']:
-        print('Converting data for {}'.format(SUBJ['ID']))
+        print('Converting data for {}'.format(session_id))
 
     ## FILE LOADING
 
     # Load behavior data
-    task = load_task_obj('_'.join(SUBJ['ID'], SUBJ['SESSION']))
+    task = load_task_obj(session_id, folder=PATHS.temp)
     assert task
 
     # Load metadata file
-    metadata = load_config(SUBJ['ID'] + '_metadata.yaml', folder=PATHS['SUBJ'])
+    metadata = load_config(session_id, folder=PATHS.temp)
     assert metadata
 
     # Get a list of the available spike files
-    spike_files = get_files(PATHS['SPIKES'], 'times_')
-    assert spike_files
+    spike_files = get_files(PATHS.spikes, 'XX')
+    assert len(spike_files)
 
     # Get the list of available LFP files
     if ADD_LFP:
-        lfp_files = get_files(PATHS['LFP'], ext='.p')
+        lfp_files = get_files(PATHS.lfp, ext='.p')
         assert lfp_files
 
     ## SETUP
@@ -53,8 +61,11 @@ def convert_data(SUBJ=SUBJ, PATHS=PATHS, SETTINGS=SETTINGS):
     # Get current date
     current_date = datetime.now(tzlocal())
 
+    # Initialize notes
+    notes = None
+
     # Get the session date
-    session_date = datetime.fromtimestamp(task.session['start'][0] / 1000, tz=tzlocal())
+    session_date = datetime.fromtimestamp(task.session['start'] / 1000, tz=tzlocal())
 
     # Define collection site information
     if SUBJ['ID'][::] == '':
@@ -62,34 +73,53 @@ def convert_data(SUBJ=SUBJ, PATHS=PATHS, SETTINGS=SETTINGS):
     else:
         data_collection = 'unknown'
 
+    if SETTINGS['CHANGE_TIME_UNIT']:
+
+        # Convert timestamp units, from milliseconds to seconds
+        task = update_task_time(task, 'change_units', value=1000, operation='divide')
+
     if SETTINGS['RESET_TIME']:
 
         # Reset task time stamps to start at the session start time
-        task = offset_task_time(task, task.session['start'][0])
+        task = update_task_time(task, 'offset', offset=task.session['start'])
+        notes = 'The exact subtracted timestamp is: {}'.format(task.time_offset)
 
     ## INITIALIZE NWB FILE
 
     # Create subject object
-    subject = Subject(age=metadata['subject']['age'],
-                      sex=metadata['subject']['sex'],
-                      description=metadata['subject']['description'],
+    age = metadata['subject']['age'] if metadata['subject']['age'] != 'XX' else None
+    sex = metadata['subject']['sex'] if metadata['subject']['sex'] != 'XX' else None
+    subject = Subject(subject_id=SUBJ['ID'], age=age, sex=sex,
                       species=metadata['subject']['species'],
-                      subject_id=SUBJ['ID'])
+                      description=metadata['subject']['description'])
+
+    # Define information for initializing NWBfile
+    experiment_description = \
+        'Task: ' + task.experiment['version']['label'] + \
+        ' build-' + task.experiment['version']['number'] + \
+        ' ({})'.format(task.experiment['language'])
+
+    # Get script path - defined as script name + parent directory (folder within repo)
+    script_path = Path(__file__)
+    source_file_name = str(script_path.parents[0] / script_path.name)
 
     # Initialize a NWB file
     nwbfile = NWBFile(session_description=metadata['study']['session_description'],
                       identifier=metadata['study']['identifier'],
                       file_create_date=current_date,
                       session_start_time=session_date,
-                      session_start_time=metadata['study']['session_start_time'],
-                      experimenter=metadata['study']['experimenter'],
-                      lab=metadata['study']['lab'],
+                      experimenter=metadata['study']['experimenter'].split(','),
+                      experiment_description=experiment_description,
+                      session_id=session_id,
                       institution=metadata['study']['institution'],
+                      keywords=metadata['study']['keywords'].split(','),
+                      notes=notes,
+                      source_script=metadata['study']['source_script'],
+                      source_script_file_name=source_file_name,
                       data_collection=data_collection,
-                      experiment_description=metadata['study']['experiment_description'],
-                      subject=subject,
-                      session_id=SUBJ['ID'] + '-' + SUBJ['SESSION'])
-
+                      stimulus_notes=metadata['study']['stimulus_notes'],
+                      lab=metadata['study']['lab'],
+                      subject=subject)
 
     ## RECORDING DEVICE INFORMATION
 
@@ -115,12 +145,11 @@ def convert_data(SUBJ=SUBJ, PATHS=PATHS, SETTINGS=SETTINGS):
     reference = None
 
     # Add electrode to NWB
-    n_electrodes = 5
+    n_electrodes = 8
     for ind in range(n_electrodes):
         nwbfile.add_electrode(x_pos, y_pos, z_pos, imp, location,
                               filtering, electrode_group,
                               id=ind, reference=reference)
-
 
     ## STIMULUS INFORMATION
 
@@ -136,48 +165,37 @@ def convert_data(SUBJ=SUBJ, PATHS=PATHS, SETTINGS=SETTINGS):
     for event, description in metadata['events'].items():
         nwbfile.add_trial_column(event, description)
 
-    # Collect trial indices
-    trial_inds = ...
-
-    # Get all trial start & stop times
-    trial_start_times = times[np.hstack([np.array([0]), trial_inds[:-1]])]
-    trial_stop_times = times[trial_inds-1]
-
     # Add event information to NWB file
-    n_trials = len(trial_inds)
-    for t_ind in range(n_trials):
-
-        # Get trial start and end times
-        t_start = trial_start_times[t_ind]
-        t_end = trial_stop_times[t_ind]
+    for t_ind in range(len(task.trial['trial'])):
 
         # Add trial information to file
-        nwbfile.add_trial(start_time=t_start,
-                          ...,
-                          stop_time=t_end
-                          )
+        try:
+            nwbfile.add_trial(start_time=task...,
+                              ...,
+                              stop_time=task...
+                              )
+        except IndexError:
+            print('\tIncomplete last trial - skipped adding.')
 
 
     ## POSITION DATA
 
-    # Get location data
-    times = task.aligned_times
-    loc_data = np.vstack([task.pos['x'], task.pos['z']])
-
     # Set position data as a spatial series and add to NWB file
     position = Position(name='position')
-    position.create_spatial_series(name='xy_position',
-                                   data=loc_data,
-                                   timestamps=times,
+    position.create_spatial_series(name='player_position',
+                                   data=np.vstack([task.position['x'], task.position['z']]),
+                                   unit='virtual units',
+                                   timestamps=task.position['time'],
                                    reference_frame='middle',
-                                   description='XY position of the subject along the track.')
+                                   description='Position of the subject along the track.')
     nwbfile.add_acquisition(position)
 
     # Create time series for speed & linear positon
     speed = TimeSeries(name='speed',
-                       data=np.array(task.pos['speed']),
+                       description='The players movement speed, computed from the position data.',
+                       data=task.position['speed'],
                        unit='virtual units / second',
-                       timestamps=times)
+                       timestamps=task.position['time'])
 
     # Add derived spatial measures to NWB file as ProcessingModule
     position_things = ProcessingModule(name='position_measures',
@@ -204,20 +222,18 @@ def convert_data(SUBJ=SUBJ, PATHS=PATHS, SETTINGS=SETTINGS):
     # Add each unit to the NWB file
     for ind, spike_file in enumerate(spike_files):
 
-        # Get channel information from file name
-        channel = spike_file.split('.')[0].split('_')[-1]
-
         # Load spike file & get spike data (example for HDF5 files)
-        with h5py.File(PATHS['SPIKES'] / spike_file, 'r') as h5file:
+        with h5py.File(PATHS.spikes / spike_file, 'r') as h5file:
 
             spike_data = h5file['spike_data_sorted']
 
             # Add unit data
             nwbfile.add_unit(id=ind,
                              electrodes=[0],
-                             channel=channel,
-                             waveform_mean=np.mean(spike_data['spikeWaveforms'][:], 0),
-                             spike_times=spike_data['spikeTimes'][:])
+                             channel=...,
+                             location=...,
+                             spike_times=...
+                             )
 
     ## FIELD DATA
 
@@ -228,7 +244,7 @@ def convert_data(SUBJ=SUBJ, PATHS=PATHS, SETTINGS=SETTINGS):
 
         # Add each LFP trace as a new object
         for ind, lfp_file in enumerate(lfp_files):
-            with open(PATHS['LFP'] / lfp_file, 'rb') as pfile:
+            with open(PATHS.lfp / lfp_file, 'rb') as pfile:
 
                 # Load ephys data
                 ephys_data = load(...)
@@ -248,12 +264,12 @@ def convert_data(SUBJ=SUBJ, PATHS=PATHS, SETTINGS=SETTINGS):
 
     # Save out NWB file
     #   Note: upcoming PYNWB supports Path objects. Until then, typecast to str
-    save_name = SUBJ['ID'] + '_' + SUBJ['SESSION'] + '.nwb'
-    with NWBHDF5IO(str(PATHS['SAVE'] / save_name), 'w') as io:
+    save_name = session_id + '.nwb'
+    with NWBHDF5IO(str(PATHS.nwb / save_name), 'w') as io:
         io.write(nwbfile)
 
     if SETTINGS['VERBOSE']:
-        print('Data converted for {}'.format(SUBJ['ID']))
+        print('Data converted for {}'.format(session_id))
 
 
 if __name__ == '__main__':
