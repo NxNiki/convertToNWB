@@ -18,7 +18,7 @@ To do so, this template includes:
 - scripts templates to apply conversion procedures to collected data files
 
 Note that this template / procedure does not include any processing of the data, such as spike sorting.
-Any such processing and analysis steps should be done separate to this data converion (and can be applied before or after).
+Any such processing and analysis steps should be done separate to this data conversion (and can be applied before or after).
 
 ## How to use this template
 
@@ -55,16 +55,13 @@ This repository is set up in the following way:
 - `notebooks/` contains notebooks that demonstrate examples of data conversion
 - `metadata/` contains config files that define metadata fields and task descriptions
 - `scripts/` contains stand alone scripts to process data files
-- `subject/` is a run folder for interim files when processing data
+- `temp/` is a run folder for interim files when processing data
 
 ## Run Procedures
 
 Data files can be processed by running the scripts available in the `scripts` folder.
 
-For information on how this process proceeds, see the notebooks:
-
-- `ConvertData.ipynb`: shows an example of converting a subject of data
-- `Examples.ipynb`: shows examples of how the metadata handling and data organization works
+For information on how this process proceeds, see the notebooks.
 
 If anything needs to be updated, changes may be required to the stored metadata and/or
 processing code. See the `Repository Layout` Section for information.
