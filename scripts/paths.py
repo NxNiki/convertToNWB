@@ -1,4 +1,4 @@
-"""Paths definition for the data files."""
+"""Path definitions."""
 
 from pathlib import Path
 

@@ -37,7 +37,7 @@ def check_files():
     for file in converted:
         print('\t {}'.format(file))
 
-    # Check the list of uncoverted files
+    # Check the list of unconverted files
     not_converted = [file for file in make_file_list(sessions) if file + '.nwb' not in converted]
 
     # Print out the list of not-converted files

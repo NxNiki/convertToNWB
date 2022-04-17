@@ -1,4 +1,4 @@
-"""Prepare data files to for conversion."""
+"""Prepare files for conversion."""
 
 # Add local folder with `conv` module
 import sys
@@ -40,7 +40,7 @@ def prepare_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
         task.meta['session'] = SUBJ['SESSION']
 
         # Save out parsed & preprocessed task information
-        save_task_obj(task, session_id, folder=PATHS.temp)
+        save_task_object(task, session_id, folder=PATHS.temp)
 
 
     ## COLLECT METADATA

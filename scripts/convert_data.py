@@ -1,4 +1,4 @@
-"""Convert a data file to NWB."""
+"""Convert a session of data to NWB."""
 
 from pathlib import Path
 from datetime import datetime
@@ -16,7 +16,6 @@ from pynwb.ecephys import ElectricalSeries, SpikeEventSeries
 import sys
 sys.path.append('..')
 from conv.io import get_files, load_config
-from conv.utils import clean_strings, get_event_time
 
 # Import settings (from local folder)
 from settings import SUBJ, SETTINGS
@@ -35,7 +34,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     session_id = '_'.join([SUBJ['ID'], SUBJ['SESSION']])
 
     if SETTINGS['VERBOSE']:
-        print('Converting data for {}'.format(session_id))
+        print('Converting data for: {}'.format(session_id))
 
     ## FILE LOADING
 
@@ -52,7 +51,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     assert len(spike_files)
 
     # Get the list of available LFP files
-    if ADD_LFP:
+    if SETTINGS['ADD_LFP']:
         lfp_files = get_files(PATHS.lfp, ext='.p')
         assert lfp_files
 
@@ -161,7 +160,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
 
     ## BEHAVIOURAL DATA
 
-    # Add event defintions
+    # Add event definitions
     for event, description in metadata['events'].items():
         nwbfile.add_trial_column(event, description)
 
@@ -190,7 +189,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
                                    description='Position of the subject along the track.')
     nwbfile.add_acquisition(position)
 
-    # Create time series for speed & linear positon
+    # Create time series for speed & linear position
     speed = TimeSeries(name='speed',
                        description='The players movement speed, computed from the position data.',
                        data=task.position['speed'],
@@ -269,7 +268,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
         io.write(nwbfile)
 
     if SETTINGS['VERBOSE']:
-        print('Data converted for {}'.format(session_id))
+        print('Data converted for: {}'.format(session_id))
 
 
 if __name__ == '__main__':

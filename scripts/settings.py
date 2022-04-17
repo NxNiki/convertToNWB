@@ -1,4 +1,4 @@
-"""Settings for converting data files."""
+"""Settings for converting sessions."""
 
 from pathlib import Path
 
