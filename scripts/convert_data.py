@@ -7,7 +7,7 @@ from dateutil.tz import tzlocal
 import h5py
 import numpy as np
 
-from pynwb import NWBFile, NWBHDF5IO, TimeSeries, ProcessingModule
+from pynwb import NWBFile, TimeSeries, ProcessingModule
 from pynwb.file import Subject
 from pynwb.behavior import Position, SpatialSeries
 from pynwb.ecephys import ElectricalSeries, SpikeEventSeries
@@ -15,7 +15,7 @@ from pynwb.ecephys import ElectricalSeries, SpikeEventSeries
 # Add local folder with `conv` module
 import sys
 sys.path.append('..')
-from conv.io import get_files, load_config
+from conv.io import get_files, load_config, make_session_name, save_nwbfile
 
 # Import settings (from local folder)
 from settings import SUBJ, SETTINGS
@@ -30,20 +30,20 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     # Initialize paths
     PATHS = Paths(SUBJ['ID'], SUBJ['SESSION'])
 
-    # Define the session ID
-    session_id = '_'.join([SUBJ['ID'], SUBJ['SESSION']])
+    # Define the session name
+    session_name = make_session_name(SUBJ['ID'], SUBJ['SESSION'])
 
     if SETTINGS['VERBOSE']:
-        print('Converting data for: {}'.format(session_id))
+        print('Converting data for: {}'.format(session_name))
 
     ## FILE LOADING
 
     # Load behavior data
-    task = load_task_obj(session_id, folder=PATHS.temp)
+    task = load_task_obj(session_name, folder=PATHS.temp)
     assert task
 
     # Load metadata file
-    metadata = load_config(session_id, folder=PATHS.temp)
+    metadata = load_config(session_name, folder=PATHS.temp)
     assert metadata
 
     # Get a list of the available spike files
@@ -109,7 +109,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
                       session_start_time=session_date,
                       experimenter=metadata['study']['experimenter'].split(','),
                       experiment_description=experiment_description,
-                      session_id=session_id,
+                      session_id=session_name,
                       institution=metadata['study']['institution'],
                       keywords=metadata['study']['keywords'].split(','),
                       notes=notes,
@@ -262,13 +262,10 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     ## FINISH
 
     # Save out NWB file
-    #   Note: upcoming PYNWB supports Path objects. Until then, typecast to str
-    save_name = session_id + '.nwb'
-    with NWBHDF5IO(str(PATHS.nwb / save_name), 'w') as io:
-        io.write(nwbfile)
+    save_nwbfile(nwbfile, session_name, folder=PATHS.nwb)
 
     if SETTINGS['VERBOSE']:
-        print('Data converted for: {}'.format(session_id))
+        print('Data converted for: {}'.format(session_name))
 
 
 if __name__ == '__main__':

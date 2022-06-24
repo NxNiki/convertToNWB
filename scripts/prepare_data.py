@@ -4,7 +4,7 @@
 import sys
 sys.path.append('..')
 from conv import process_session
-from conv.io import get_files, load_configs, save_config
+from conv.io import get_files, load_configs, save_config, make_session_name
 
 # Import settings (from local folder)
 from settings import SUBJ, SETTINGS
@@ -19,11 +19,11 @@ def prepare_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     # Initialize paths
     PATHS = Paths(SUBJ['ID'], SUBJ['SESSION'])
 
-    # Define the session ID
-    session_id = '_'.join([SUBJ['ID'], SUBJ['SESSION']])
+    # Define the session name
+    session_name = make_session_name(SUBJ['ID'], SUBJ['SESSION'])
 
     if SETTINGS['VERBOSE']:
-        print('Preparing data for {}'.format(session_id))
+        print('Preparing data for {}'.format(session_name))
 
     ## PARSE LOG FILE
 
@@ -40,7 +40,7 @@ def prepare_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
         task.meta['session'] = SUBJ['SESSION']
 
         # Save out parsed & preprocessed task information
-        save_task_object(task, session_id, folder=PATHS.temp)
+        save_task_object(task, session_name, folder=PATHS.temp)
 
 
     ## COLLECT METADATA
@@ -53,10 +53,10 @@ def prepare_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     metadata = load_configs(metadata_files, PATHS.metadata)
 
     # Save out the collected config file for the session
-    save_config(metadata, session_id, folder=PATHS.temp)
+    save_config(metadata, session_name, folder=PATHS.temp)
 
     if SETTINGS['VERBOSE']:
-        print('Completed data preparation for {}'.format(session_id))
+        print('Completed data preparation for {}'.format(session_name))
 
 
 if __name__ == '__main__':
