@@ -1,7 +1,8 @@
 # Subject information
 age: XX
 sex: XX
-species: human
+species: Homo sapiens
 description:  >-
-    The subject is a clinical patient with intractable epilepsy undergoing pre-surgical mapping
-    in an epilepsy monitoring unit, with implants including Behnke-Fried microwires.
+    The subject is a clinical patient with intractable epilepsy undergoing pre-surgical
+    mapping in an epilepsy monitoring unit, with implanted electrodes including
+    microwires that can detect single-unit activity.
