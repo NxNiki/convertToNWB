@@ -1,4 +1,5 @@
-# Device information
-name: Microwire Electrodes
-description: Behnke Fried/Micro Inner Wire Bundle
-manufacturer: Ad-Tech Medical
+# Recording device information
+device_name: Microwire Electrodes
+device_description: Behnke Fried/Micro Inner Wire Bundle
+device_manufacturer: Ad-Tech Medical
+bundle_description: Microwire Bundle
