@@ -64,7 +64,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     notes = None
 
     # Get the session date
-    session_date = datetime.fromtimestamp(task.session['start'] / 1000, tz=tzlocal())
+    session_date = datetime.fromtimestamp(task.session['start_time'] / 1000, tz=tzlocal())
 
     # Define collection site information
     if SUBJ['ID'][::] == '':
@@ -75,12 +75,12 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     if SETTINGS['CHANGE_TIME_UNIT']:
 
         # Convert timestamp units, from milliseconds to seconds
-        task = update_task_time(task, 'change_units', value=1000, operation='divide')
+        task.update_time('change_units', value=1000, operation='divide')
 
     if SETTINGS['RESET_TIME']:
 
         # Reset task time stamps to start at the session start time
-        task = update_task_time(task, 'offset', offset=task.session['start'])
+        task.update_time('offset', offset=task.session['start_time'])
         notes = 'The exact subtracted timestamp is: {}'.format(task.time_offset)
 
     ## INITIALIZE NWB FILE
