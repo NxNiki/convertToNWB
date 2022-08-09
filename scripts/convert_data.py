@@ -16,6 +16,7 @@ from pynwb.ecephys import ElectricalSeries, SpikeEventSeries
 import sys
 sys.path.append('..')
 from conv.io import get_files, load_config, make_session_name, save_nwbfile
+from conv.electrodes import Electrodes
 
 # Import settings (from local folder)
 from settings import SUBJ, SETTINGS
@@ -45,6 +46,11 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     # Load metadata file
     metadata = load_config(session_name, folder=PATHS.temp)
     assert metadata
+
+    # Load the electrodes information
+    #   Note: example loads dummy data for electrodes
+    electrodes = Electrodes()
+    electrodes.add_bundle('bundle1', 'loc1')
 
     # Get a list of the available spike files
     spike_files = get_files(PATHS.spikes, 'XX')
@@ -127,28 +133,20 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
                                    metadata['device']['description'],
                                    metadata['device']['manufacturer'])
 
-    # Electrodes - add electrode description
-    electrode_name = '{}-microwires-{}'.format('A', 'chnum')
-    location = metadata['electrode']['location']
-    description = metadata['electrode']['location']
+    # Add electrode bundles and electrode information
+    for bundle_name, bundle_location in electrodes:
 
-    # Add electrode group
-    electrode_group = nwbfile.create_electrode_group(electrode_name, \
-        description=description, location=location, device=device)
+        # Create an electrode group for the current bundle
+        electrode_group = nwbfile.create_electrode_group(name=bundle_name,
+                                                         description=metadata['device']['bundle_description'],
+                                                         location=bundle_location,
+                                                         device=device)
 
-    # Define / get electrode information
-    x_pos, y_pos, z_pos = 0.0, 0.0, 0.0
-    imp = np.nan
-    location = 'place'
-    filtering = '0, np.inf'
-    reference = None
-
-    # Add electrode to NWB
-    n_electrodes = 8
-    for ind in range(n_electrodes):
-        nwbfile.add_electrode(x_pos, y_pos, z_pos, imp, location,
-                              filtering, electrode_group,
-                              id=ind, reference=reference)
+        # Add electrodes to file for the current bundle
+        for electrode_ind in range(electrodes.n_electrodes_per_bundle):
+            nwbfile.add_electrode(location=electrode_group.location,
+                                  group=electrode_group,
+                                  id=electrode_ind, enforce_unique_id=False)
 
     ## STIMULUS INFORMATION
 
@@ -156,7 +154,6 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     stim_description = 'DESCRIPTION.'
     for stim in stimuli:
         nwbfile.add_stimulus(stim)
-
 
     ## BEHAVIOURAL DATA
 
@@ -175,7 +172,6 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
                               )
         except IndexError:
             print('\tIncomplete last trial - skipped adding.')
-
 
     ## POSITION DATA
 
@@ -201,7 +197,6 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
                                        description='Derived measures related to position data.',
                                        data_interfaces=[speed])
     nwbfile.add_processing_module(position_things)
-
 
     ## UNIT DATA
 

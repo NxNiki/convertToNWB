@@ -2,7 +2,7 @@
 
 import sys
 sys.path.append('..')
-from conv.io import get_files
+from conv.io import get_files, make_session_name
 
 # Import processing functions (from local scripts)
 from prepare_data import prepare_data
@@ -31,11 +31,11 @@ def run_all_conversions():
 
             # Collect together the subject information & define session ID
             SUBJ = {'ID' : subj, 'SESSION' : session}
-            session_id = '_'.join([SUBJ['ID'], SUBJ['SESSION']])
+            session_name = make_session_name(SUBJ['ID'], SUBJ['SESSION'])
 
             # Check for skipping subject
             if session_id in SKIP:
-                print("SKIPPING SESSION: {}".format(session_id))
+                print("SKIPPING SESSION: {}".format(session_name))
                 continue
 
             # Prepare data

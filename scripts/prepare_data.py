@@ -42,7 +42,6 @@ def prepare_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
         # Save out parsed & preprocessed task information
         save_task_object(task, session_name, folder=PATHS.temp)
 
-
     ## COLLECT METADATA
 
     if SETTINGS['VERBOSE']:
