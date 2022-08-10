@@ -3,6 +3,7 @@
 # Import local code
 from conv.task import Task
 from conv.process import process_task
+from conv.utils import print_status
 
 ###################################################################################################
 ###################################################################################################
@@ -30,8 +31,7 @@ def process_session(file_path_log, process=False):
     # Parse the log file
     task = parse_lines_log(file_path)
 
-    if verbose:
-        print('\tparsing completed...')
+    print_status(verbose, 'parsing completed...', 1)
 
     if process:
         task = process_task(task)
@@ -66,21 +66,39 @@ def parse_lines_log(file_path, task=None):
 
     # Loop across all lines in log file and collect information
     with open(file_path, 'r') as fobj:
+
+        #  Get the start & end times of the session, and count number of lines
+        lines = fobj.readlines()
+        task.session['start_time'] = lines[0].split('\t')[0]
+        task.session['end_time'] = lines[-1].split('\t')[0]
+        n_lines = len(lines)
+
+        # Reset file object to the start of the file
+        fobj.seek(0)
+
         for ix, line in enumerate(fobj.readlines()):
 
-            ## Setup
+            # ------ SETUP ------
             line = line.replace('\r', '')
             tokens = line[:-1].split('\t')
 
-            # Check and collect information for different task phases
+            # Check for lines that seem to have an issue
             if len(tokens) <= 3:
                 print('Unexpected line length at line {}'.format(ix))
                 continue
 
-            if len(tokens) == None:
+            # Parse consistent variables
+            time = tokens[0]
+            frame = tokens[1]
+            event = tokens[2]
+            subevent = tokens[3]
+
+            ## ------ WORDS WORDS WORDS ------
+            if event == 'THINGS':
                 ...
 
-            if len(tokens) > None:
+            ## ------ WORDS WORDS WORDS ------
+            if event == 'THINGS':
                 ...
 
 

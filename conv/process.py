@@ -4,31 +4,45 @@ import numpy as np
 
 # Import local code
 from conv.measures import compute_error
-from conv.timestamps import align_times
+from conv.timestamps import fit_sync_alignment, predict_times
+from conv.utils import print_status
 
 ###################################################################################################
 ###################################################################################################
 
-def process_task(task):
+def process_task(task, verbose=True):
     """Process task information.
 
     Parameters
     ----------
     task : Task
-        Unprocessed task information.
+        Task object with information parsed from the logfile.
 
     Returns
     -------
     task : Task
-        Processed task information.
+        Task object with pre-processing applied.
     """
 
+    print_status(verbose, 'processing task data:', 1)
+
     # Process each aspect of the task information
-    task = process_time_info(task)
-    task = process_task_info(task)
-    task = process_position_info(task)
-    task = process_location_info(task)
-    task = process_error_info(task)
+    task = process_time_info(task, verbose=verbose)
+    task = process_trial_info(task, verbose=verbose)
+    task = process_stimulus_info(task, verbose=verbose)
+    task = process_position_info(task, verbose=verbose)
+    task = process_error_info(task, verbose=verbose)
+
+    # Run sync pulse time alignment
+    if verbose:
+        print('\trunning time alignment::')
+    task = sync_fit_alignment(task, verbose=verbose)
+    task = sync_apply_alignment(task, verbose=verbose)
+
+    # Check and fix any trial number discrepancies
+    if verbose:
+        print('\tchecking task info:')
+    task = check_task_info(task, verbose=verbose)
 
     return task
 
@@ -36,17 +50,31 @@ def process_task(task):
 def process_time_info(task):
     """Process time related information."""
 
-    # ....
-    task['time'] = ...
+    print_status(verbose, 'timestamps...', 2)
 
-    # Compute the spikeoffset time by fitting a model between time recordings
-    task['spikeoffset'] = align_times(nsp_time, behavioral_time, logtimes)
+    ...
+
+    # Convert all time fields to be float values
+    task.update_time(convert_to_array, skip='session', dtype=float)
+    task.convert_type('session', ['start_time', 'end_time'], float)
 
     return task
 
 
-def process_task_info(task):
+def process_trial_info(task):
     """Process per trial task related information."""
+
+    print_status(verbose, 'trial info...', 2)
+
+    ...
+
+    return task
+
+
+def process_stimulus_info(task):
+    """Process stimulus related information."""
+
+    print_status(verbose, 'stimulus info...', 2)
 
     ...
 
@@ -56,13 +84,7 @@ def process_task_info(task):
 def process_position_info(task):
     """Process continuously sampled position related information."""
 
-    ...
-
-    return task
-
-
-def process_location_info(task):
-    """Process per trial location related information."""
+    print_status(verbose, 'position info...', 2)
 
     ...
 
@@ -71,6 +93,49 @@ def process_location_info(task):
 
 def process_error_info(task):
     """Process per trial error related information."""
+
+    print_status(verbose, 'error info...', 2)
+
+    ...
+
+    return task
+
+
+def sync_fit_alignment(task, verbose=True):
+    """Process synchronization pulses."""
+
+    print_status(verbose, 'fitting sync model...', 2)
+
+    # Compute the sync offset time by fitting a model between time recordings
+    intercept, coef, score = fit_sync_alignment(sync_behav, sync_neuro)
+    task.sync['alignment']['intercept'] = intercept
+    task.sync['alignment']['coef'] = coef
+    task.sync['alignment']['score'] = score
+
+    if verbose:
+        print("\t\t\tcorrelation: {}".format(score))
+
+
+def sync_apply_alignment(task, verbose=True):
+    """Apply temporal alignment to all behavioral time stamps."""
+
+    print_status(verbose, 'applying alignment...', 2)
+
+    task.update_time(predict_times, skip='sync',
+                     intercept=task.sync['alignment']['intercept'],
+                     coef=task.sync['alignment']['coef'])
+
+    # Might need to do something custom for sync pulses
+
+    task.status['time_aligned'] = True
+
+    return task
+
+
+def check_task_info(task):
+    """   """
+
+    print_status(verbose, 'checkting XX...', 2)
 
     ...
 
