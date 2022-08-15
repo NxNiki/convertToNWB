@@ -1,22 +1,21 @@
 """Convert a session of data to NWB."""
 
 from pathlib import Path
-from datetime import datetime
-from dateutil.tz import tzlocal
 
 import h5py
 import numpy as np
 
 from pynwb import NWBFile, TimeSeries, ProcessingModule
 from pynwb.file import Subject
-from pynwb.behavior import Position, SpatialSeries
-from pynwb.ecephys import ElectricalSeries, SpikeEventSeries
+from pynwb.behavior import Position
+from pynwb.ecephys import ElectricalSeries
 
 # Add local folder with `conv` module
 import sys
 sys.path.append('..')
 from conv.io import get_files, load_config, make_session_name, save_nwbfile
 from conv.electrodes import Electrodes
+from conv.utils import print_status, get_current_date, convert_time_to_date
 
 # Import settings (from local folder)
 from settings import SUBJ, SETTINGS
@@ -34,8 +33,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     # Define the session name
     session_name = make_session_name(SUBJ['ID'], SUBJ['SESSION'])
 
-    if SETTINGS['VERBOSE']:
-        print('Converting data for: {}'.format(session_name))
+    print_status(SETTINGS['VERBOSE'], 'Converting data for: {}'.format(session_name), 0)
 
     ## FILE LOADING
 
@@ -63,14 +61,11 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
 
     ## SETUP
 
-    # Get current date
-    current_date = datetime.now(tzlocal())
-
     # Initialize notes
     notes = None
 
     # Get the session date
-    session_date = datetime.fromtimestamp(task.session['start_time'] / 1000, tz=tzlocal())
+    session_date = convert_time_to_date(task.session['start_time'] / 1000)
 
     # Define collection site information
     if SUBJ['ID'][::] == '':
@@ -111,7 +106,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     # Initialize a NWB file
     nwbfile = NWBFile(session_description=metadata['study']['session_description'],
                       identifier=metadata['study']['identifier'],
-                      file_create_date=current_date,
+                      file_create_date=get_current_date(),
                       session_start_time=session_date,
                       experimenter=metadata['study']['experimenter'].split(','),
                       experiment_description=experiment_description,
@@ -171,7 +166,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
                               stop_time=task...
                               )
         except IndexError:
-            print('\tIncomplete last trial - skipped adding.')
+            print_status(SETTINGS['VERBOSE'], 'Incomplete last trial - skipped adding.', 1)
 
     ## POSITION DATA
 
@@ -184,6 +179,16 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
                                    reference_frame='middle',
                                    description='Position of the subject along the track.')
     nwbfile.add_acquisition(position)
+
+    # Set head direction information as a compass direction and add to NWB file
+    heading = CompassDirection(name='heading')
+    heading.create_spatial_series(name='direction',
+                                  data=task.head_direction['degrees'],
+                                  unit='degrees',
+                                  timestamps=task.head_direction['time'],
+                                  reference_frame='north',
+                                  description='The direction the subjects head is pointing, in degrees.')
+    nwbfile.add_acquisition(heading)
 
     # Create time series for speed & linear position
     speed = TimeSeries(name='speed',
@@ -214,20 +219,31 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
         nwbfile.add_unit_column(field, description)
 
     # Add each unit to the NWB file
-    for ind, spike_file in enumerate(spike_files):
+    unit_ind = incrementer()
+    for spike_file in enumerate(spike_files):
 
         # Load spike file & get spike data (example for HDF5 files)
         with h5py.File(PATHS.spikes / spike_file, 'r') as h5file:
 
             spike_data = h5file['spike_data_sorted']
 
+            spike_times = spike_data[...]
+
+            # If task information has been offset, apply the same to spike times
+            if task.status['time_reset']:
+                spike_times = spike_times - task.status['time_offset']
+
+            # Get the spike times for the cluster
+            unit_spike_times = spike_times[mask]
+            if SETTINGS['DROP_BEFORE_TASK']:
+                unit_spike_times = unit_spike_times[unit_spike_times >= task.session['start_time']]
+
             # Add unit data
-            nwbfile.add_unit(id=ind,
+            nwbfile.add_unit(id=next(unit_ind),
                              electrodes=[0],
                              channel=...,
                              location=...,
-                             spike_times=...
-                             )
+                             spike_times=unit_spike_times)
 
     ## FIELD DATA
 
@@ -259,8 +275,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     # Save out NWB file
     save_nwbfile(nwbfile, session_name, folder=PATHS.nwb)
 
-    if SETTINGS['VERBOSE']:
-        print('Data converted for: {}'.format(session_name))
+    print(SETTINGS['VERBOSE'], 'Data converted for: {}'.format(session_name), 0)
 
 
 if __name__ == '__main__':

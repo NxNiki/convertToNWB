@@ -5,6 +5,7 @@ import sys
 sys.path.append('..')
 from conv import process_session
 from conv.io import get_files, load_configs, save_config, make_session_name
+from conv.utils import print_status
 
 # Import settings (from local folder)
 from settings import SUBJ, SETTINGS
@@ -22,30 +23,21 @@ def prepare_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     # Define the session name
     session_name = make_session_name(SUBJ['ID'], SUBJ['SESSION'])
 
-    if SETTINGS['VERBOSE']:
-        print('Preparing data for {}'.format(session_name))
+    print_status(SETTINGS['VERBOSE'], 'Preparing data for {}'.format(session_name), 0)
 
     ## PARSE LOG FILE
 
     if SETTINGS['PARSE_LOG']:
 
-        if SETTINGS['VERBOSE']:
-            print('  processing logfile...')
+        print(SETTINGS['VERBOSE'], 'processing logfile...', 1)
 
+        task.add_metadata(SUBJ['TASK'], SUBJ['ID'], SUBJ['SESSION'])
         task = process_session(PATHS.behavior / 'logfile.txt')
-
-        # Add session metadata information
-        task.meta['task'] = SUBJ['TASK']
-        task.meta['subject'] = SUBJ['ID']
-        task.meta['session'] = SUBJ['SESSION']
-
-        # Save out parsed & preprocessed task information
         save_task_object(task, session_name, folder=PATHS.temp)
 
     ## COLLECT METADATA
 
-    if SETTINGS['VERBOSE']:
-        print('  preparing metadata files...')
+    print(SETTINGS['VERBOSE'], 'preparing metadata files...', 1)
 
     # Get a list of the available metadata files, and load them
     metadata_files = get_files(PATHS.metadata, select='yaml')
@@ -54,8 +46,7 @@ def prepare_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     # Save out the collected config file for the session
     save_config(metadata, session_name, folder=PATHS.temp)
 
-    if SETTINGS['VERBOSE']:
-        print('Completed data preparation for {}'.format(session_name))
+    print_status(SETTINGS['VERBOSE'], 'Completed data preparation for {}'.format(session_name), 0)
 
 
 if __name__ == '__main__':
