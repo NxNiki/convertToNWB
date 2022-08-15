@@ -127,15 +127,15 @@ def sync_apply_alignment(task, verbose=True):
 
     # Might need to do something custom for sync pulses
 
-    task.status['time_aligned'] = True
+    task.set_status('time_aligned', True)
 
     return task
 
 
-def check_task_info(task):
-    """   """
+def check_task_info(task, verbose=True):
+    """Check task object for consistency."""
 
-    print_status(verbose, 'checkting XX...', 2)
+    print_status(verbose, 'checking task info...', 2)
 
     ...
 

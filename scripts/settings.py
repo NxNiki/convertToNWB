@@ -1,9 +1,11 @@
 """Settings for converting sessions."""
 
-from pathlib import Path
+###################################################################################################
+###################################################################################################
 
-###################################################################################################
-###################################################################################################
+#### DEFINE TASK
+
+TASK = ''
 
 #### DEFINE SUBJECT INFORMATION
 
@@ -30,16 +32,11 @@ SKIP = []
 ###################################################################################################
 ## For standard usage, nothing should need to be updated below
 
-#### DEFINE DATA PROPERTIES
-
-# Sampling rates
-S_RATE = 30000
-S_RATE_FIELD = 500
-
 #### COLLECT SETTINGS INTO COLLECTION OBJECTS
 
 ## SUBJECT INFORMATION
 SUBJ = {
+    'TASK' : TASK,
     'ID' : SUBJ_ID,
     'SESSION' : SESSION
 }
