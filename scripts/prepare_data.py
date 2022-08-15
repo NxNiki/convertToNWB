@@ -29,10 +29,7 @@ def prepare_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
 
     if SETTINGS['PARSE_LOG']:
 
-        print(SETTINGS['VERBOSE'], 'processing logfile...', 1)
-
-        task.add_metadata(SUBJ['TASK'], SUBJ['ID'], SUBJ['SESSION'])
-        task = process_session(PATHS.behavior / 'logfile.txt')
+        task = process_session(PATHS, process=True, verbose=SETTINGS['VERBOSE'])
         save_task_object(task, session_name, folder=PATHS.temp)
 
     ## COLLECT METADATA

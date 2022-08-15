@@ -82,7 +82,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
 
         # Reset task time stamps to start at the session start time
         task.update_time('offset', offset=task.session['start_time'])
-        notes = 'The exact subtracted timestamp is: {}'.format(task.time_offset)
+        notes = 'The exact subtracted timestamp is: {}'.format(task.info['time_offset'])
 
     ## INITIALIZE NWB FILE
 
@@ -231,7 +231,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
 
             # If task information has been offset, apply the same to spike times
             if task.status['time_reset']:
-                spike_times = spike_times - task.status['time_offset']
+                spike_times = spike_times - task.info['time_offset']
 
             # Get the spike times for the cluster
             unit_spike_times = spike_times[mask]

@@ -8,15 +8,19 @@ from conv.utils import print_status
 ###################################################################################################
 ###################################################################################################
 
-def process_session(file_path_log, process=False):
+def process_session(paths, process=False, task=None, verbose=True):
     """Process a session of data.
 
     Parameters
     ----------
-    file_path_log : str or Path
-        Path to the task logfile.
+    paths : Paths
+        Paths object.
     process : bool, optional, default: False
         Whether to process the collected task information.
+    task : Task, optional
+        Task object to use.
+    verbose : bool, optional, default: True
+        Whether to print out updates.
 
     Returns
     -------
@@ -28,10 +32,11 @@ def process_session(file_path_log, process=False):
     if task is None:
         task = Task()
 
-    # Parse the log file
-    task = parse_lines_log(file_path)
+    # Add metadata information to task object
+    task.add_metadata(paths._task, paths._subject, paths._session)
 
-    print_status(verbose, 'parsing completed...', 1)
+    # Parse the log file
+    task = parse_lines_log(paths.behavior / 'logfile.txt', task=task)
 
     if process:
         task = process_task(task)
@@ -39,7 +44,7 @@ def process_session(file_path_log, process=False):
     return task
 
 
-def parse_lines_log(file_path, task=None):
+def parse_lines_log(file_path, task=None, verbose=True):
     """Parse the lines of a task log file, collecting information into a Task object.
 
     Parameters
@@ -52,6 +57,8 @@ def parse_lines_log(file_path, task=None):
     task : Task
         Task event containing parsed logfile information.
     """
+
+    print_status(verbose, 'parsing logfile...', 2)
 
     # Initialize task object, if not given, for collecting data
     if not Task:
@@ -105,7 +112,7 @@ def parse_lines_log(file_path, task=None):
     return task
 
 
-def parse_lines_sync(file_path, task=None):
+def parse_lines_sync(file_path, task=None, verbose=True):
     """"Parse timestamp information from a synchronization file.
 
     Parameters
@@ -118,6 +125,8 @@ def parse_lines_sync(file_path, task=None):
     task : Task
         Task event containing parsed syncfile information.
     """
+
+    print_status(verbose, 'parsing sync...', 2)
 
     # Initialize task object, if not given, for collecting data
     if not Task:
