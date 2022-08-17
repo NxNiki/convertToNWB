@@ -2,15 +2,15 @@
 
 import sys
 sys.path.append('..')
-from conv.io import get_files, make_session_name
+from conv.io import get_files, make_session_name, print_status
+from conv.paths import Paths
 
 # Import processing functions (from local scripts)
 from prepare_data import prepare_data
 from convert_data import convert_data
 
 # Import settings
-from settings import SUBJ, SETTINGS, SKIP
-from paths import DATA_PATH
+from settings import PROJECT_PATH, EXPERIMENT, SETTINGS, SKIP
 
 ###################################################################################################
 ###################################################################################################
@@ -18,33 +18,35 @@ from paths import DATA_PATH
 def run_all_conversions():
     """Run NWB conversion on all available TH sessions."""
 
-    print('\n\nRUNNING ALL CONVERSIONS')
+    print_status(SETTINGS['VERBOSE'], '\n\nRUNNING ALL CONVERSIONS FOR - {}\n\n'.format(EXPERIMENT), 0)
+
+    paths = Paths(PROJECT_PATH)
 
     # Get a list of all available sessions
     all_sessions = {}
-    subj_files = get_files(DATA_PATH, ignore='NWB')
-    for subj in subj_files:
-        all_sessions[subj] = get_files(DATA_PATH / subj, select='session')
+    subjects = get_files(paths.recordings)
+    for subject in subjects:
+        all_sessions[subject] = get_files(paths.recordings / subject / EXPERIMENT, select='session')
 
-    for subj, sessions in all_sessions.items():
+    for subject, sessions in all_sessions.items():
         for session in sessions:
 
             # Collect together the subject information & define session ID
-            SUBJ = {'ID' : subj, 'SESSION' : session}
-            session_name = make_session_name(SUBJ['ID'], SUBJ['SESSION'])
+            SESSION = {'SUBJECT' : subject, 'EXPERIMENT' : EXPERIMENT, 'SESSION' : session}
+            session_name = make_session_name(SESSION['SUBJECT'], SESSION['EXPERIMENT'], SESSION['SESSION'])
 
             # Check for skipping subject
             if session_id in SKIP:
-                print("SKIPPING SESSION: {}".format(session_name))
+                print(SETTINGS['VERBOSE'], 'SKIPPING SESSION: {}'.format(session_name), 0)
                 continue
 
             # Prepare data
-            prepare_data(SUBJ=SUBJ, SETTINGS=SETTINGS)
+            prepare_data(SESSION=SESSION, SETTINGS=SETTINGS)
 
             # Run data conversion
-            convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS)
+            convert_data(SESSION=SESSION, SETTINGS=SETTINGS)
 
-    print('\n\n FINISHED CONVERSIONS{}\n\n')
+    print_status(SETTINGS['VERBOSE'], '\n\n FINISHED CONVERSIONS FOR - {}\n\n'.format(EXPERIMENT), 0)
 
 if __name__ == '__main__':
     run_all_conversions()

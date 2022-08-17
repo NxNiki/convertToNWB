@@ -16,10 +16,10 @@ sys.path.append('..')
 from conv.io import get_files, load_config, make_session_name, save_nwbfile
 from conv.electrodes import Electrodes
 from conv.utils import print_status, get_current_date, convert_time_to_date
+from conv.paths import Paths
 
 # Import settings (from local folder)
-from settings import SUBJ, SETTINGS
-from paths import Paths
+from settings import PROJECT_PATH, SESSION, SETTINGS
 
 ###################################################################################################
 ###################################################################################################
@@ -28,21 +28,21 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     """Convert a session of data to an NWB file."""
 
     # Initialize paths
-    PATHS = Paths(SUBJ['ID'], SUBJ['SESSION'])
+    paths = Paths(PROJECT_PATH, SESSION['SUBJECT'], SESSION['EXPERIMENT'], SESSION['SESSION'])
 
     # Define the session name
-    session_name = make_session_name(SUBJ['ID'], SUBJ['SESSION'])
+    session_name = make_session_name(SESSION['SUBJECT'], SESSION['EXPERIMENT'], SESSION['SESSION'])
 
     print_status(SETTINGS['VERBOSE'], 'Converting data for: {}'.format(session_name), 0)
 
     ## FILE LOADING
 
     # Load behavior data
-    task = load_task_obj(session_name, folder=PATHS.temp)
+    task = load_task_obj(session_name, folder=paths.task)
     assert task
 
     # Load metadata file
-    metadata = load_config(session_name, folder=PATHS.temp)
+    metadata = load_config(session_name, folder=paths.metadata)
     assert metadata
 
     # Load the electrodes information
@@ -51,12 +51,12 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     electrodes.add_bundle('bundle1', 'loc1')
 
     # Get a list of the available spike files
-    spike_files = get_files(PATHS.spikes, 'XX')
+    spike_files = get_files(paths.spikes, 'XX')
     assert len(spike_files)
 
     # Get the list of available LFP files
     if SETTINGS['ADD_LFP']:
-        lfp_files = get_files(PATHS.lfp, ext='.p')
+        lfp_files = get_files(paths.micro_lfp, ext='.p')
         assert lfp_files
 
     ## SETUP
@@ -223,7 +223,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     for spike_file in enumerate(spike_files):
 
         # Load spike file & get spike data (example for HDF5 files)
-        with h5py.File(PATHS.spikes / spike_file, 'r') as h5file:
+        with h5py.File(paths.spikes / spike_file, 'r') as h5file:
 
             spike_data = h5file['spike_data_sorted']
 
@@ -254,7 +254,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
 
         # Add each LFP trace as a new object
         for ind, lfp_file in enumerate(lfp_files):
-            with open(PATHS.lfp / lfp_file, 'rb') as pfile:
+            with open(paths.micro_lfp / lfp_file, 'rb') as pfile:
 
                 # Load ephys data
                 ephys_data = load(...)
@@ -273,7 +273,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     ## FINISH
 
     # Save out NWB file
-    save_nwbfile(nwbfile, session_name, folder=PATHS.nwb)
+    save_nwbfile(nwbfile, session_name, folder=paths.nwb)
 
     print(SETTINGS['VERBOSE'], 'Data converted for: {}'.format(session_name), 0)
 
