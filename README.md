@@ -55,7 +55,6 @@ This repository is set up in the following way:
 - `notebooks/` contains notebooks that demonstrate examples of data conversion
 - `metadata/` contains config files that define metadata fields and task descriptions
 - `scripts/` contains stand alone scripts to process data files
-- `temp/` is a run folder for interim files when processing data
 
 ## Run Procedures
 
