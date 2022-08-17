@@ -3,10 +3,12 @@ identifier: XX
 session_id: XX
 session_start_time: 1111/11/11
 session_description: XX
-experimenter: XX
+experimenter:
+  - XX
 experiment_description: XX
 institution: Columbia University
-keywords: XX
+keywords:
+  - XX
 source_script: https://github.com/JacobsSU/ConvertXX/
 source_script_file_name: XX
 data_collection: XX
