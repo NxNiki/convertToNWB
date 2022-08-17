@@ -1,6 +1,6 @@
 # Notebooks
 
-The following notebooks are for converting T3 data.
+The following notebooks are template for converting data to NWB.
 
 ### 00-Intro&Metadata
 
@@ -8,11 +8,11 @@ This notebook introduces the approach used for conversion, and explores the meta
 
 ### 01-ConvertToNWB
 
-This notebook steps through converting T3 data to NWB.
+This notebook steps through converting a session of data to NWB.
 
 ### 02-RunConversion
 
-This notebook runs the processes the convert data to NWB.
+This notebook runs the processes to convert the data to NWB.
 
 ### A1-ExploreData
 
