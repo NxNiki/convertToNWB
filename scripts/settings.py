@@ -3,14 +3,18 @@
 ###################################################################################################
 ###################################################################################################
 
+#### DEFINE SUBJECT & SESSION INFORMATION
+
+SUBJECT = ''
+SESSION = ''
+
 #### DEFINE EXPERIMENT
 
 EXPERIMENT = ''
 
-#### DEFINE SUBJECT INFORMATION
+## PROJECT PATH
 
-SUBJECT = ''
-SESSION = ''
+PROJECT_PATH = ''
 
 #### DEFINE PROPERTIES OF THE SESSION FILE
 
@@ -31,10 +35,6 @@ SKIP = []
 
 ###################################################################################################
 ## For standard usage, nothing should need to be updated below
-
-## PROJECT PATH
-
-PROJECT_PATH = ''
 
 #### COLLECT SETTINGS INTO COLLECTION OBJECTS
 
