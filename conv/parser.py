@@ -33,7 +33,7 @@ def process_session(paths, process=False, task=None, verbose=True):
         task = Task()
 
     # Add metadata information to task object
-    task.add_metadata(paths._task, paths._subject, paths._session)
+    task.add_metadata(paths._subject, paths._experiment, paths._session)
 
     # Parse the log file
     task = parse_lines_log(paths.behavior / 'logfile.txt', task=task)
