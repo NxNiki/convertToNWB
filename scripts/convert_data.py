@@ -1,7 +1,5 @@
 """Convert a session of data to NWB."""
 
-from pathlib import Path
-
 import h5py
 import numpy as np
 
@@ -24,7 +22,7 @@ from settings import PROJECT_PATH, SESSION, SETTINGS
 ###################################################################################################
 ###################################################################################################
 
-def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
+def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
     """Convert a session of data to an NWB file."""
 
     # Initialize paths
@@ -68,7 +66,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     session_date = convert_time_to_date(task.session['start_time'] / 1000)
 
     # Define collection site information
-    if SUBJ['ID'][::] == '':
+    if SESSION['SUBJECT'][:] == '':
         data_collection = 'XX'
     else:
         data_collection = 'unknown'
@@ -89,7 +87,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     # Create subject object
     age = metadata['subject']['age'] if metadata['subject']['age'] != 'XX' else None
     sex = metadata['subject']['sex'] if metadata['subject']['sex'] != 'XX' else None
-    subject = Subject(subject_id=SUBJ['ID'], age=age, sex=sex,
+    subject = Subject(subject_id=SESSION['SUBJECT'], age=age, sex=sex,
                       species=metadata['subject']['species'],
                       description=metadata['subject']['description'])
 
@@ -98,10 +96,6 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
         'Task: ' + task.experiment['version']['label'] + \
         ' build-' + task.experiment['version']['number'] + \
         ' ({})'.format(task.experiment['language'])
-
-    # Get script path - defined as script name + parent directory (folder within repo)
-    script_path = Path(__file__)
-    source_file_name = str(script_path.parents[0] / script_path.name)
 
     # Initialize a NWB file
     nwbfile = NWBFile(session_description=metadata['study']['session_description'],
@@ -115,7 +109,7 @@ def convert_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
                       keywords=metadata['study']['keywords'],
                       notes=notes,
                       source_script=metadata['study']['source_script'],
-                      source_script_file_name=source_file_name,
+                      source_script_file_name='scripts/' + __file__,
                       data_collection=data_collection,
                       stimulus_notes=metadata['study']['stimulus_notes'],
                       lab=metadata['study']['lab'],
