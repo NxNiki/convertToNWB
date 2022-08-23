@@ -3,8 +3,9 @@
 # Add local folder with `conv` module
 import sys
 sys.path.append('..')
+from conv import Paths
 from conv.io import get_files, make_file_list, missing_files
-from conv.paths import Paths
+from convth.utils import print_status
 
 # Import settings
 from settings import PROJECT_PATH, EXPERIMENT
@@ -15,7 +16,7 @@ from settings import PROJECT_PATH, EXPERIMENT
 def check_files():
     """Check available data files and conversion status."""
 
-    print('\n\nCHECKING AVAILABLE FILES\n')
+    print_status(True, '\nCHECKING AVAILABLE FILES - {}'.format(EXPERIMENT), 0)
 
     paths = Paths(PROJECT_PATH)
 
@@ -33,12 +34,12 @@ def check_files():
     # Check the list of available subject & sessions
     print('Available subjects & sessions:')
     for cur_subj, cur_sessions in sessions.items():
-        print('\t', cur_subj, '\t', ', '.join(cur_sessions))
+        print_status(True, cur_subj + '\t' + ', '.join(cur_sessions), 1)
 
     # Check the list of converted NWB files
     print('Converted NWB files:')
     for file in converted:
-        print('\t {}'.format(file))
+        print_status(True, file, 1)
 
     # Check the list of uncoverted files
     file_list = make_file_list(EXPERIMENT, sessions, '.nwb')
@@ -47,9 +48,9 @@ def check_files():
     # Print out the list of not-converted files
     print('Not yet converted sessions:')
     for file in not_converted:
-        print('\t', file)
+        print_status(True, file, 1)
 
-    print('\n\n')
+    print_status(True, '\n\n', 0)
 
 
 if __name__ == '__main__':

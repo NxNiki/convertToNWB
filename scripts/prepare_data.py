@@ -3,10 +3,9 @@
 # Add local folder with `conv` module
 import sys
 sys.path.append('..')
-from conv import process_session
-from conv.io import get_files, load_configs, save_config, make_session_name
+from conv import Paths, process_session
+from conv.io import get_files, make_session_name, load_configs, save_config, save_task_object
 from conv.utils import print_status
-from conv.paths import Paths
 
 # Import settings (from local folder)
 from settings import PROJECT_PATH, SESSION, SETTINGS

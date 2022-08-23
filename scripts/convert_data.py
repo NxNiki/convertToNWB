@@ -1,6 +1,5 @@
 """Convert a session of data to NWB."""
 
-import h5py
 import numpy as np
 
 from pynwb import NWBFile, TimeSeries, ProcessingModule
@@ -11,10 +10,10 @@ from pynwb.ecephys import ElectricalSeries
 # Add local folder with `conv` module
 import sys
 sys.path.append('..')
-from conv.io import get_files, load_config, make_session_name, save_nwbfile
-from conv.electrodes import Electrodes
-from conv.utils import print_status, get_current_date, convert_time_to_date
-from conv.paths import Paths
+from conv import Paths, Electrodes
+from conv.io import (get_files, make_session_name,
+                     load_config, load_task_obj, open_h5file, save_nwbfile)
+from conv.utils import incrementer, get_current_date, print_status, convert_time_to_date
 
 # Import settings (from local folder)
 from settings import PROJECT_PATH, SESSION, SETTINGS
@@ -213,30 +212,42 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
         nwbfile.add_unit_column(field, description)
 
     # Add each unit to the NWB file
-    unit_ind = incrementer()
+    ind = incrementer()
     for spike_file in enumerate(spike_files):
 
+        # Get channel information from file name
+        channel = ...
+
         # Load spike file & get spike data (example for HDF5 files)
-        with h5py.File(paths.spikes / spike_file, 'r') as h5file:
+        with open_h5file(spike_file, paths.spikes) as h5file:
 
             spike_data = h5file['spike_data_sorted']
+            spike_times = spike_data['spike_times'][:]
+            spike_clusters = spike_data['spike_clusters'][:]
+            spike_waveforms = spike_data['spike_waveforms'][:]
 
-            spike_times = spike_data[...]
+        # If task information has been offset, apply the same to spike times
+        if task.status['time_reset']:
+            spike_times = spike_times - task.info['time_offset']
 
-            # If task information has been offset, apply the same to spike times
-            if task.status['time_reset']:
-                spike_times = spike_times - task.info['time_offset']
+        # Loop across clusters within the file, and add each unit
+        for cluster in set(spike_clusters):
+            mask = spike_clusters == cluster
 
             # Get the spike times for the cluster
             unit_spike_times = spike_times[mask]
             if SETTINGS['DROP_BEFORE_TASK']:
                 unit_spike_times = unit_spike_times[unit_spike_times >= task.session['start_time']]
 
+            # Get the average waveform
+            unit_waveform_mean = np.mean(spike_waveforms[mask, :], 0)
+
             # Add unit data
-            nwbfile.add_unit(id=next(unit_ind),
+            nwbfile.add_unit(id=next(ind),
                              electrodes=[0],
-                             channel=...,
+                             channel=channel,
                              location=...,
+                             waveform_mean=unit_waveform_mean,
                              spike_times=unit_spike_times)
 
     ## FIELD DATA
