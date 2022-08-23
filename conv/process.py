@@ -2,10 +2,12 @@
 
 import numpy as np
 
+from convnwb.timestamps.align import fit_sync_alignment, predict_times
+from convnwb.utils.convert import convert_to_array, convert_type
+from convnwb.utils.log import print_status
+
 # Import local code
-from conv.measures import compute_error
-from conv.timestamps import fit_sync_alignment, predict_times
-from conv.utils import print_status
+from conv.measures import XX
 
 ###################################################################################################
 ###################################################################################################

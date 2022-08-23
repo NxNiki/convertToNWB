@@ -2,7 +2,7 @@
 
 from convnwb.task import TaskBase
 
-from convnwb.plts import plot_alignment
+from convnwb.plts.timestamps import plot_alignment
 
 ###################################################################################################
 ###################################################################################################
