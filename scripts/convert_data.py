@@ -138,10 +138,26 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
 
     ## STIMULUS INFORMATION
 
+    # Add stimulus information here...
+    # Depending on the task, this could included using:
+    # nwbfile.stimulus (with `add_stimulus`), which can contain stimuli such as images
+    # nwbfile.acquisition (with `add_acquisition`), which can contain information such as positions
+
     # Add stimuli information to file, as NWB stimulus objects
-    stim_description = 'DESCRIPTION.'
+    #   In this case, `add_stimulus` expect to add a series of TimeSeries objects - could be images, etc
+    stimuli = ... # Load or define stimuli (load might want to move to top)
     for stim in stimuli:
         nwbfile.add_stimulus(stim)
+    # AND/OR
+    # Add stimulus position information
+    stimuli = Position(name='stimuli')
+    stimuli.create_spatial_series(name='stimulus_positions',
+                                  data=task.stimuli['...'],
+                                  unit='virtual units',
+                                  reference_frame='corner',
+                                  rate=0.,
+                                  description=metadata['stimulus']['position'])
+    nwbfile.add_acquisition(stimuli)
 
     ## BEHAVIOURAL DATA
 
@@ -163,6 +179,31 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
 
     ## POSITION DATA
 
+    # Define and add the boundary definitions
+    boundaries = Position(name='boundaries')
+    boundaries.create_spatial_series(name='center',
+                                     data=np.array([task.environment['...'],
+                                                    task.environment['...']]),
+                                     unit='virtual units',
+                                     reference_frame='corner',
+                                     rate=0.,
+                                     description=metadata['position']['center'])
+    boundaries.create_spatial_series(name='x_range',
+                                     data=[task.environment['...'],
+                                           task.environment['...']],
+                                     unit='virtual units',
+                                     reference_frame='corner',
+                                     rate=0.,
+                                     description=metadata['position']['x_range'])
+    boundaries.create_spatial_series(name='z_range',
+                                     data=[task.environment['...'],
+                                           task.environment['...']],
+                                     unit='virtual units',
+                                     reference_frame='corner',
+                                     rate=0.,
+                                     description=metadata['position']['x_range'])
+    nwbfile.add_acquisition(boundaries)
+
     # Set position data as a spatial series and add to NWB file
     position = Position(name='position')
     position.create_spatial_series(name='player_position',
@@ -170,7 +211,7 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
                                    unit='virtual units',
                                    timestamps=task.position['time'],
                                    reference_frame='middle',
-                                   description='Position of the subject along the track.')
+                                   description=metadata['position']['player_position'])
     nwbfile.add_acquisition(position)
 
     # Set head direction information as a compass direction and add to NWB file
@@ -180,20 +221,20 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
                                   unit='degrees',
                                   timestamps=task.head_direction['time'],
                                   reference_frame='north',
-                                  description='The direction the subjects head is pointing, in degrees.')
+                                  description=metadata['position']['heading'])
     nwbfile.add_acquisition(heading)
 
     # Create time series for speed & linear position
     speed = TimeSeries(name='speed',
-                       description='The players movement speed, computed from the position data.',
                        data=task.position['speed'],
                        unit='virtual units / second',
-                       timestamps=task.position['time'])
+                       timestamps=task.position['time'],
+                       description=metadata['position']['speed'])
 
     # Add derived spatial measures to NWB file as ProcessingModule
     position_things = ProcessingModule(name='position_measures',
-                                       description='Derived measures related to position data.',
-                                       data_interfaces=[speed])
+                                       data_interfaces=[speed],
+                                       description=metadata['position']['position_measures'])
     nwbfile.add_processing_module(position_things)
 
     ## UNIT DATA

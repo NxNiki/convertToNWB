@@ -1,0 +1,12 @@
+# Position related information
+player_position: Position of the player.
+vertical_position: Vertical position of the subject.
+speed: The players movement speed, computed from the position data.
+heading: The direction the players head is pointing, in degrees.
+position_measures: Derived measures related to position data.
+
+# Arena definition
+center: Center of the arena.
+x_range: Navigable range of the x-axis of the arena [min, max].
+y_range: Navigable range of the y-axis of the arena [min, max].
+z_range: Navigable range of the z-axis of the arena [min, max].
