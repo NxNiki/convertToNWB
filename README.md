@@ -7,14 +7,14 @@ Template structure for converting data to NWB format.
 This repository provides a template for managing and converting data files into the
 [neurodata without borders](https://www.nwb.org/) format.
 
-Specifically, this template is designed for converting human single-unit data, in which
-implanted microwires have been recorded along with a task for which behavioural data and
-task information has been logged.
+Specifically, this template is designed for converting human single-unit data collected
+from implanted microwires along with a task for which behavioural data and task information
+has been logged.
 
 To do so, this template includes:
 
-- metadata information and prompts required for data conversion
 - code for parsing task logfiles & organizing data
+- a system for organizing and defining metadata to be used and added during data conversion
 - basic utilities for preprocessing and aligning data
 - script templates to apply conversion procedures to collected data files
 
@@ -40,7 +40,7 @@ In order to apply this template to a new task, the following updates are needed:
 - processing procedures to be applied during the conversion process need to be defined
     - update `process.py` with any pre-processing, potentially adding code to `measures.py`
 - the conversion has to be specified, detailing data should be organized in the NWB file
-    - this can be interactively explored in `notebooks/01-ConvertToNWB.ipynwb`
+    - this can be interactively explored in `notebooks/01-ConvertToNWB.ipynb`
     - this then needs implementing in `scripts/convert_data.py`
 - the scripts and settings need updating for any custom settings / procedures
     - this may include defining and using `settings`, and/or custom processing steps
@@ -72,8 +72,8 @@ This template requires Python >= 3.7.
 
 As well as typical scientific Python packages, dependencies include:
 
-- [convnwb](https://github.com/JacobsSU/convnwb)
 - [pynwb](https://github.com/NeurodataWithoutBorders/pynwb)
+- [convnwb](https://github.com/JacobsSU/convnwb)
 
 The full list of dependencies is listed in `requirements.txt`.
 
