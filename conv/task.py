@@ -1,6 +1,6 @@
 """Task class."""
 
-from convnwb.task import TaskBase
+from convnwb.objects.task import TaskBase
 
 from convnwb.plts.timestamps import plot_alignment
 

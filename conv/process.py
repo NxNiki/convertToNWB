@@ -7,7 +7,7 @@ from convnwb.utils.convert import convert_to_array, convert_type
 from convnwb.utils.log import print_status
 
 # Import local code
-from conv.measures import XX
+# from conv.measures import ...
 
 ###################################################################################################
 ###################################################################################################
