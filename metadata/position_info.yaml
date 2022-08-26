@@ -7,7 +7,6 @@ speed: Movement speed of the player, computed from the position data.
 derived_position_measures: Derived measures related to position data.
 
 # Arena definition
-center: Center of the arena.
-x_range: Navigable range of the x-axis of the arena [min, max].
-y_range: Navigable range of the y-axis of the arena [min, max].
-z_range: Navigable range of the z-axis of the arena [min, max].
+arena_center: Center of the arena.
+arena_x_range: Navigable range of the x-axis of the arena [min, max].
+arena_z_range: Navigable range of the z-axis of the arena [min, max].

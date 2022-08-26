@@ -181,27 +181,27 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
 
     # Define and add the boundary definitions
     boundaries = Position(name='boundaries')
-    boundaries.create_spatial_series(name='center',
+    boundaries.create_spatial_series(name='arena_center',
                                      data=np.array([task.environment['...'],
                                                     task.environment['...']]),
                                      unit='virtual units',
                                      reference_frame='corner',
                                      rate=0.,
-                                     description=metadata['position']['center'])
-    boundaries.create_spatial_series(name='x_range',
-                                     data=[task.environment['...'],
-                                           task.environment['...']],
+                                     description=metadata['position']['arena_center'])
+    boundaries.create_spatial_series(name='arena_x_range',
+                                     data=np.array([task.environment['...'],
+                                                    task.environment['...']]),
                                      unit='virtual units',
                                      reference_frame='corner',
                                      rate=0.,
-                                     description=metadata['position']['x_range'])
-    boundaries.create_spatial_series(name='z_range',
-                                     data=[task.environment['...'],
-                                           task.environment['...']],
+                                     description=metadata['position']['arena_x_range'])
+    boundaries.create_spatial_series(name='arena_z_range',
+                                     data=np.array([task.environment['...'],
+                                                    task.environment['...']]),
                                      unit='virtual units',
                                      reference_frame='corner',
                                      rate=0.,
-                                     description=metadata['position']['x_range'])
+                                     description=metadata['position']['arena_z_range'])
     nwbfile.add_acquisition(boundaries)
 
     # Set position data as a spatial series and add to NWB file
@@ -233,8 +233,8 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
 
     # Add derived spatial measures to NWB file as ProcessingModule
     position_derivatives = ProcessingModule(name='position_measures',
-                                       data_interfaces=[speed],
-                                       description=metadata['position']['derived_position_measures'])
+                                            data_interfaces=[speed],
+                                            description=metadata['position']['derived_position_measures'])
     nwbfile.add_processing_module(position_derivatives)
 
     ## UNIT DATA
