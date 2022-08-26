@@ -156,7 +156,7 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
                                   unit='virtual units',
                                   reference_frame='corner',
                                   rate=0.,
-                                  description=metadata['stimulus']['position'])
+                                  description=metadata['stimulus']['...'])
     nwbfile.add_acquisition(stimuli)
 
     ## BEHAVIOURAL DATA
@@ -215,14 +215,14 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
     nwbfile.add_acquisition(position)
 
     # Set head direction information as a compass direction and add to NWB file
-    heading = CompassDirection(name='heading')
-    heading.create_spatial_series(name='direction',
-                                  data=task.head_direction['degrees'],
-                                  unit='degrees',
-                                  timestamps=task.head_direction['time'],
-                                  reference_frame='north',
-                                  description=metadata['position']['heading'])
-    nwbfile.add_acquisition(heading)
+    head_direction = CompassDirection(name='head_direction')
+    head_direction.create_spatial_series(name='head_direction',
+                                         data=task.head_direction['degrees'],
+                                         unit='degrees',
+                                         timestamps=task.head_direction['time'],
+                                         reference_frame='north',
+                                         description=metadata['position']['head_direction'])
+    nwbfile.add_acquisition(head_direction)
 
     # Create time series for speed & linear position
     speed = TimeSeries(name='speed',
@@ -232,10 +232,10 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
                        description=metadata['position']['speed'])
 
     # Add derived spatial measures to NWB file as ProcessingModule
-    position_things = ProcessingModule(name='position_measures',
+    position_derivatives = ProcessingModule(name='position_measures',
                                        data_interfaces=[speed],
-                                       description=metadata['position']['position_measures'])
-    nwbfile.add_processing_module(position_things)
+                                       description=metadata['position']['derived_position_measures'])
+    nwbfile.add_processing_module(position_derivatives)
 
     ## UNIT DATA
 

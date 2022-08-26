@@ -1,9 +1,10 @@
 # Position related information
 player_position: Position of the player.
-vertical_position: Vertical position of the subject.
-speed: The players movement speed, computed from the position data.
-heading: The direction the players head is pointing, in degrees.
-position_measures: Derived measures related to position data.
+head_direction: The head direction of the player, in degrees.
+
+# Derived position measures
+speed: Movement speed of the player, computed from the position data.
+derived_position_measures: Derived measures related to position data.
 
 # Arena definition
 center: Center of the arena.
