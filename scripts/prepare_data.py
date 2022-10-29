@@ -13,7 +13,7 @@ from settings import PROJECT_PATH, SESSION, SETTINGS
 ###################################################################################################
 ###################################################################################################
 
-def prepare_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
+def prepare_data(SESSION=SESSION, SETTINGS=SETTINGS):
     """Prepare a session of data for NWB conversion."""
 
     # Initialize paths
@@ -22,6 +22,7 @@ def prepare_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     # Define the session name
     session_name = make_session_name(SESSION['SUBJECT'], SESSION['EXPERIMENT'], SESSION['SESSION'])
 
+    print_status(SETTINGS['VERBOSE'], '\nPREPARING XX DATA\n', 0)
     print_status(SETTINGS['VERBOSE'], 'Preparing data for {}'.format(session_name), 0)
 
     ## PARSE LOG FILE
@@ -42,7 +43,8 @@ def prepare_data(SUBJ=SUBJ, SETTINGS=SETTINGS):
     # Save out the collected config file for the session
     save_config(metadata, session_name, folder=paths.metadata)
 
-    print_status(SETTINGS['VERBOSE'], 'Completed data preparation for {}'.format(session_name), 0)
+    print_status(SETTINGS['VERBOSE'],
+                 'Completed data preparation for {}\n'.format(session_name), 0)
 
 
 if __name__ == '__main__':

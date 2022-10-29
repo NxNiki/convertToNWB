@@ -4,7 +4,7 @@ import sys
 sys.path.append('..')
 from conv import Paths
 from conv.io import get_files, make_session_name
-from convt3.utils import print_status
+from conv.utils import print_status
 
 # Import processing functions (from local scripts)
 from prepare_data import prepare_data

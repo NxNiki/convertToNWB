@@ -13,7 +13,7 @@ sys.path.append('..')
 from conv import Paths, Electrodes
 from conv.io import (get_files, make_session_name,
                      load_config, load_task_obj, open_h5file, save_nwbfile)
-from conv.utils import incrementer, get_current_date, print_status, convert_time_to_date
+from conv.utils import incrementer, get_current_date, convert_time_to_date, print_status
 
 # Import settings (from local folder)
 from settings import PROJECT_PATH, SESSION, SETTINGS
@@ -51,11 +51,13 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
 
     # Get a list of the available spike files
     if SETTINGS['ADD_UNITS']:
+
         spike_files = get_files(paths.spikes, 'XX')
         assert len(spike_files)
 
     # Get the list of available LFP files
     if SETTINGS['ADD_LFP']:
+
         lfp_files = get_files(paths.micro_lfp, ext='.p')
         assert lfp_files
 
