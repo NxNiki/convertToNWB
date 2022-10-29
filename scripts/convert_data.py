@@ -42,14 +42,17 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
     metadata = load_config(session_name, folder=paths.metadata)
     assert metadata
 
-    # Load the electrodes information
-    #   Note: example loads dummy data for electrodes
-    electrodes = Electrodes()
-    electrodes.add_bundle('bundle1', 'loc1')
+    # Load the electrode information
+    if SETTINGS['ADD_ELECTRODES']:
+
+        # TEMP: example loads dummy data for electrodes
+        electrodes = Electrodes()
+        electrodes.add_bundle('bundle1', 'loc1')
 
     # Get a list of the available spike files
-    spike_files = get_files(paths.spikes, 'XX')
-    assert len(spike_files)
+    if SETTINGS['ADD_UNITS']:
+        spike_files = get_files(paths.spikes, 'XX')
+        assert len(spike_files)
 
     # Get the list of available LFP files
     if SETTINGS['ADD_LFP']:
@@ -116,25 +119,27 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
 
     ## RECORDING DEVICE INFORMATION
 
-    # Create device object
-    device = nwbfile.create_device(metadata['device']['name'],
-                                   metadata['device']['description'],
-                                   metadata['device']['manufacturer'])
+    if SETTINGS['ADD_ELECTRODES']:
 
-    # Add electrode bundles and electrode information
-    for bundle_name, bundle_location in electrodes:
+        # Create device object
+        device = nwbfile.create_device(metadata['device']['name'],
+                                       metadata['device']['description'],
+                                       metadata['device']['manufacturer'])
 
-        # Create an electrode group for the current bundle
-        electrode_group = nwbfile.create_electrode_group(name=bundle_name,
-                                                         description=metadata['device']['bundle_description'],
-                                                         location=bundle_location,
-                                                         device=device)
+        # Add electrode bundles and electrode information
+        for bundle_name, bundle_location in electrodes:
 
-        # Add electrodes to file for the current bundle
-        for electrode_ind in range(electrodes.n_electrodes_per_bundle):
-            nwbfile.add_electrode(location=electrode_group.location,
-                                  group=electrode_group,
-                                  id=electrode_ind, enforce_unique_id=False)
+            # Create an electrode group for the current bundle
+            electrode_group = nwbfile.create_electrode_group(name=bundle_name,
+                                                             description=metadata['device']['bundle_description'],
+                                                             location=bundle_location,
+                                                             device=device)
+
+            # Add electrodes to file for the current bundle
+            for electrode_ind in range(electrodes.n_electrodes_per_bundle):
+                nwbfile.add_electrode(location=electrode_group.location,
+                                      group=electrode_group,
+                                      id=electrode_ind, enforce_unique_id=False)
 
     ## STIMULUS INFORMATION
 
@@ -145,7 +150,7 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
 
     # Add stimuli information to file, as NWB stimulus objects
     #   In this case, `add_stimulus` expect to add a series of TimeSeries objects - could be images, etc
-    stimuli = ... # Load or define stimuli (load might want to move to top)
+    stimuli = ...      # Load or define stimuli (load might want to move to top)
     for stim in stimuli:
         nwbfile.add_stimulus(stim)
     # AND/OR
@@ -172,8 +177,7 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
         try:
             nwbfile.add_trial(start_time=task...,
                               ...,
-                              stop_time=task...
-                              )
+                              stop_time=task...)
         except IndexError:
             print_status(SETTINGS['VERBOSE'], 'Incomplete last trial - skipped adding.', 1)
 
@@ -239,57 +243,59 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
 
     ## UNIT DATA
 
-    # Define some sorting metadata
-    description = "Spike sorting solutions - done with {} (v-{}) by {}.".format(\
-        metadata['sorting']['sorter'],
-        metadata['sorting']['version'],
-        metadata['sorting']['done_by'])
+    if SETTINGS['ADD_UNITS']:
 
-    # Initialize the units data, with given description
-    nwbfile.units = Units('units', description=description)
+        # Define some sorting metadata
+        description = "Spike sorting solutions - done with {} (v-{}) by {}.".format(\
+            metadata['sorting']['sorter'],
+            metadata['sorting']['version'],
+            metadata['sorting']['done_by'])
 
-    # Add unit metadata columns
-    for field, description in metadata['units'].items():
-        nwbfile.add_unit_column(field, description)
+        # Initialize the units data, with given description
+        nwbfile.units = Units('units', description=description)
 
-    # Add each unit to the NWB file
-    ind = incrementer()
-    for spike_file in enumerate(spike_files):
+        # Add unit metadata columns
+        for field, description in metadata['units'].items():
+            nwbfile.add_unit_column(field, description)
 
-        # Get channel information from file name
-        channel = ...
+        # Add each unit to the NWB file
+        ind = incrementer()
+        for spike_file in enumerate(spike_files):
 
-        # Load spike file & get spike data (example for HDF5 files)
-        with open_h5file(spike_file, paths.spikes) as h5file:
+            # Get channel information from file name
+            channel = ...
 
-            spike_data = h5file['spike_data_sorted']
-            spike_times = spike_data['spike_times'][:]
-            spike_clusters = spike_data['spike_clusters'][:]
-            spike_waveforms = spike_data['spike_waveforms'][:]
+            # Load spike file & get spike data (example for HDF5 files)
+            with open_h5file(spike_file, paths.spikes) as h5file:
 
-        # If task information has been offset, apply the same to spike times
-        if task.status['time_reset']:
-            spike_times = spike_times - task.info['time_offset']
+                spike_data = h5file['spike_data_sorted']
+                spike_times = spike_data['spike_times'][:]
+                spike_clusters = spike_data['spike_clusters'][:]
+                spike_waveforms = spike_data['spike_waveforms'][:]
 
-        # Loop across clusters within the file, and add each unit
-        for cluster in set(spike_clusters):
-            mask = spike_clusters == cluster
+            # If task information has been offset, apply the same to spike times
+            if task.status['time_reset']:
+                spike_times = spike_times - task.info['time_offset']
 
-            # Get the spike times for the cluster
-            unit_spike_times = spike_times[mask]
-            if SETTINGS['DROP_BEFORE_TASK']:
-                unit_spike_times = unit_spike_times[unit_spike_times >= task.session['start_time']]
+            # Loop across clusters within the file, and add each unit
+            for cluster in set(spike_clusters):
+                mask = spike_clusters == cluster
 
-            # Get the average waveform
-            unit_waveform_mean = np.mean(spike_waveforms[mask, :], 0)
+                # Get the spike times for the cluster
+                unit_spike_times = spike_times[mask]
+                if SETTINGS['DROP_BEFORE_TASK']:
+                    unit_spike_times = unit_spike_times[unit_spike_times >= task.session['start_time']]
 
-            # Add unit data
-            nwbfile.add_unit(id=next(ind),
-                             electrodes=[0],
-                             channel=channel,
-                             location=...,
-                             waveform_mean=unit_waveform_mean,
-                             spike_times=unit_spike_times)
+                # Get the average waveform
+                unit_waveform_mean = np.mean(spike_waveforms[mask, :], 0)
+
+                # Add unit data
+                nwbfile.add_unit(id=next(ind),
+                                 electrodes=[0],
+                                 channel=channel,
+                                 location=...,
+                                 waveform_mean=unit_waveform_mean,
+                                 spike_times=unit_spike_times)
 
     ## FIELD DATA
 
@@ -300,7 +306,7 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
 
         # Add each LFP trace as a new object
         for ind, lfp_file in enumerate(lfp_files):
-            with open(paths.micro_lfp / lfp_file, 'rb') as pfile:
+            with open(paths.lfp / lfp_file, 'rb') as pfile:
 
                 # Load ephys data
                 ephys_data = load(...)
@@ -309,8 +315,8 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
                 ephys_ts = ElectricalSeries('field_data_' + str(ind),
                                             ephys_data,
                                             electrode_table_region,
-                                            starting_time=0.,  # TO CHECK
-                                            rate=S_RATE_FIELD,
+                                            starting_time=0.,    # Might need update this
+                                            rate=...,            # Need to add this somewhere
                                             resolution=np.inf,
                                             comments="...",
                                             description="LFP time series.")

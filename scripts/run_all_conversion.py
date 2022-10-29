@@ -3,7 +3,8 @@
 import sys
 sys.path.append('..')
 from conv import Paths
-from conv.io import get_files, make_session_name, print_status
+from conv.io import get_files, make_session_name
+from convt3.utils import print_status
 
 # Import processing functions (from local scripts)
 from prepare_data import prepare_data
@@ -30,7 +31,15 @@ def run_all_conversions():
     for subject in subjects:
         all_sessions[subject] = get_files(paths.recordings / subject / EXPERIMENT, select='session')
 
+    # Get a list of already converted sessions
+    converted = get_files(paths.nwb, select='nwb')
+
     for subject, sessions in all_sessions.items():
+
+        if subject in SKIP['SUBJECTS']:
+            print_status(SETTINGS['VERBOSE'], 'SKIPPING SUBJECT: \t{}'.format(subject), 0)
+            continue
+
         for session in sessions:
 
             # Collect together the subject information & define session ID
@@ -40,8 +49,13 @@ def run_all_conversions():
                                              SESSION['SESSION'])
 
             # Check for skipping subject
-            if session_id in SKIP:
-                print_status(SETTINGS['VERBOSE'], 'SKIPPING SESSION: {}'.format(session_name), 0)
+            if session_name in SKIP['SESSIONS']:
+                print_status(SETTINGS['VERBOSE'], 'SKIPPING SESSION: \t{}'.format(session_name), 0)
+                continue
+
+            # Check for whether to skip already run
+            if SETTINGS['SKIP_ALREADY_RUN'] and session_name + '.nwb' in converted:
+                print_status(SETTINGS['VERBOSE'], 'SESSION ALREADY RUN: \t{}'.format(session_name), 0)
                 continue
 
             # Prepare data
