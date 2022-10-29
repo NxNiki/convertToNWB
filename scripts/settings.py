@@ -1,56 +1,85 @@
 """Settings for converting sessions."""
 
 ###################################################################################################
-###################################################################################################
-
-#### DEFINE SUBJECT & SESSION INFORMATION
-
-SUBJECT = ''
-SESSION = ''
-
-#### DEFINE EXPERIMENT
-
-EXPERIMENT = ''
-
-## PROJECT PATH
+## PATH SETTINGS
 
 PROJECT_PATH = ''
 
-#### DEFINE PROPERTIES OF THE SESSION FILE
-
-...
-
-#### DEFINE RUN SETTINGS
-
-PARSE_LOG = True
-ADD_LFP = False
-RESET_TIME = True
-CHANGE_TIME_UNIT = True
-DROP_BEFORE_TASK = True
-VERBOSE = True
-
-#### DEFINE SKIP SESSIONS
-
-SKIP = []
-
 ###################################################################################################
-## For standard usage, nothing should need to be updated below
+## SUBJECT SETTINGS
 
-#### COLLECT SETTINGS INTO COLLECTION OBJECTS
+SUBJECT = ''
+EXPERIMENT = ''
+SESSION = ''
 
 ## SESSION INFORMATION
 SESSION = {
-    'SUBJECT' : SUBJ_ID,
+    'SUBJECT' : SUBJECT,
     'EXPERIMENT' : EXPERIMENT,
     'SESSION' : SESSION,
 }
 
-## RUN SETTINGS
+###################################################################################################
+## DEFINE PROPERTIES OF THE SESSION
+
+...
+
+PROPERTIES = {
+    '...' : ...,
+}
+
+###################################################################################################
+## DEFINE RUN SETTINGS
+
+# Logfile settings
+PARSE_LOG = True
+
+# Run settings
+SKIP_ALREADY_RUN = True
+VERBOSE = True
+
+# Specify what to add to file
+ADD_ELECTRODES = False
+ADD_UNITS = True
+ADD_LFP = False
+
+# Time related settings
+RESET_TIME = True
+CHANGE_TIME_UNIT = True
+DROP_BEFORE_TASK = True
+
 SETTINGS = {
+
+    # Run settings
+    'SKIP_ALREADY_RUN' : SKIP_ALREADY_RUN,
+    'VERBOSE' : VERBOSE,
+
+    # Logfile settings
     'PARSE_LOG' : PARSE_LOG,
+
+    # What to add
+    'ADD_ELECTRODES' : ADD_ELECTRODES,
+    'ADD_UNITS' : ADD_UNITS,
     'ADD_LFP' : ADD_LFP,
+
+    # Time related settings
     'RESET_TIME' : RESET_TIME,
     'CHANGE_TIME_UNIT' : CHANGE_TIME_UNIT,
     'DROP_BEFORE_TASK' : DROP_BEFORE_TASK,
-    'VERBOSE' : VERBOSE.
+}
+
+###################################################################################################
+## DEFINE SKIP SESSIONS
+
+SKIP_SUBJECTS = [
+    '...',
+]
+
+SKIP_SESSIONS = [
+    '...',
+]
+
+SKIP = {
+    'SUBJECTS' : SKIP_SUBJECTS,
+    'SESSIONS' : SKIP_SESSIONS,
 }
