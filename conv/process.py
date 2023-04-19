@@ -36,14 +36,12 @@ def process_task(task, verbose=True):
     task = process_error_info(task, verbose=verbose)
 
     # Run sync pulse time alignment
-    if verbose:
-        print('\trunning time alignment::')
+    print_status(verbose, 'running time alignment:', 1)
     task = sync_fit_alignment(task, verbose=verbose)
     task = sync_apply_alignment(task, verbose=verbose)
 
     # Check and fix any trial number discrepancies
-    if verbose:
-        print('\tchecking task info:')
+    print_status(verbose, 'checking task info:', 1)
     task = check_task_info(task, verbose=verbose)
 
     return task
@@ -114,8 +112,7 @@ def sync_fit_alignment(task, verbose=True):
     task.sync['alignment']['coef'] = coef
     task.sync['alignment']['score'] = score
 
-    if verbose:
-        print("\t\t\tcorrelation: {}".format(score))
+    print_status(verbose, "correlation: {}".format(score), 3)
 
 
 def sync_apply_alignment(task, verbose=True):
@@ -137,7 +134,7 @@ def sync_apply_alignment(task, verbose=True):
 def check_task_info(task, verbose=True):
     """Check task object for consistency."""
 
-    print_status(verbose, 'checking task info...', 2)
+    print_status(verbose, 'checking object consistency...', 2)
 
     ...
 
