@@ -34,7 +34,7 @@ def prepare_data(SESSION=SESSION, SETTINGS=SETTINGS):
 
     ## COLLECT METADATA
 
-    print(SETTINGS['VERBOSE'], 'preparing metadata files...', 1)
+    print_status(SETTINGS['VERBOSE'], 'preparing metadata files...', 1)
 
     # Get a list of the available metadata files, and load them
     metadata_files = get_files('../metadata/', select='yaml')
