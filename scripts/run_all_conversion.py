@@ -1,9 +1,11 @@
 """Run conversion on all sessions."""
 
+import traceback
+
 import sys
 sys.path.append('..')
 from conv import Paths
-from conv.io import get_files, make_session_name
+from conv.io import get_files, make_session_name, save_txt
 from conv.utils import print_status
 
 # Import processing functions (from local scripts)
@@ -11,7 +13,7 @@ from prepare_data import prepare_data
 from convert_data import convert_data
 
 # Import settings
-from settings import PROJECT_PATH, EXPERIMENT, SETTINGS, SKIP
+from settings import PROJECT_PATH, EXPERIMENT, SETTINGS, GROUP, SKIP
 
 ###################################################################################################
 ###################################################################################################
@@ -54,15 +56,24 @@ def run_all_conversions():
                 continue
 
             # Check for whether to skip already run
-            if SETTINGS['SKIP_ALREADY_RUN'] and session_name + '.nwb' in converted:
+            if GROUP['SKIP_ALREADY_RUN'] and session_name + '.nwb' in converted:
                 print_status(SETTINGS['VERBOSE'], 'SESSION ALREADY RUN: \t{}'.format(session_name), 0)
                 continue
 
-            # Prepare data
-            prepare_data(SESSION=SESSION, SETTINGS=SETTINGS)
+            try:
 
-            # Run data conversion
-            convert_data(SESSION=SESSION, SETTINGS=SETTINGS)
+                # Prepare data
+                prepare_data(SESSION=SESSION, SETTINGS=SETTINGS)
+
+                # Run data conversion
+                convert_data(SESSION=SESSION, SETTINGS=SETTINGS)
+
+            except Exception as excp:
+
+                if not GROUP['CONTINUE_ON_FAIL']:
+                    raise
+                print_status(SETTINGS['VERBOSE'], 'ISSUE CONVERTING SESSION: \t{}'.format(session_name), 0)
+                save_txt(traceback.format_exc(), session_name, folder=paths.nwb / 'zFailed')
 
     msg = '\n\n FINISHED CONVERSIONS FOR - {}\n\n'.format(EXPERIMENT)
     print_status(SETTINGS['VERBOSE'], msg, 0)

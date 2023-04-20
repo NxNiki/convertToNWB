@@ -34,7 +34,6 @@ PROPERTIES = {
 PARSE_LOG = True
 
 # Run settings
-SKIP_ALREADY_RUN = True
 VERBOSE = True
 
 # Specify what to add to file
@@ -50,7 +49,6 @@ DROP_BEFORE_TASK = True
 SETTINGS = {
 
     # Run settings
-    'SKIP_ALREADY_RUN' : SKIP_ALREADY_RUN,
     'VERBOSE' : VERBOSE,
 
     # Logfile settings
@@ -65,6 +63,19 @@ SETTINGS = {
     'RESET_TIME' : RESET_TIME,
     'CHANGE_TIME_UNIT' : CHANGE_TIME_UNIT,
     'DROP_BEFORE_TASK' : DROP_BEFORE_TASK,
+}
+
+###################################################################################################
+## DEFINE GROUP LEVEL SETTINGS
+
+SKIP_ALREADY_RUN = False
+CONTINUE_ON_FAIL = False
+
+GROUP = {
+
+    'SKIP_ALREADY_RUN' : SKIP_ALREADY_RUN,
+    'CONTINUE_ON_FAIL' : CONTINUE_ON_FAIL,
+
 }
 
 ###################################################################################################

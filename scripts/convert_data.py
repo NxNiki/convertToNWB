@@ -3,7 +3,7 @@
 import numpy as np
 
 from pynwb import NWBFile, TimeSeries, ProcessingModule
-from pynwb.file import Subject
+from pynwb.file import Subject, Units
 from pynwb.behavior import Position
 from pynwb.ecephys import ElectricalSeries
 
@@ -12,7 +12,7 @@ import sys
 sys.path.append('..')
 from conv import Paths, Electrodes
 from conv.io import (get_files, make_session_name,
-                     load_config, load_task_obj, open_h5file, save_nwbfile)
+                     load_config, load_task_object, open_h5file, save_nwbfile)
 from conv.utils import incrementer, get_current_date, convert_time_to_date, print_status
 
 # Import settings (from local folder)
@@ -30,12 +30,13 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
     # Define the session name
     session_name = make_session_name(SESSION['SUBJECT'], SESSION['EXPERIMENT'], SESSION['SESSION'])
 
-    print_status(SETTINGS['VERBOSE'], 'Converting data for: {}'.format(session_name), 0)
+    print_status(SETTINGS['VERBOSE'], '\nCONVERTING XX DATA\n', 0)
+    print_status(SETTINGS['VERBOSE'], 'Converting data for: \t{}'.format(session_name), 0)
 
     ## FILE LOADING
 
     # Load behavior data
-    task = load_task_obj(session_name, folder=paths.task)
+    task = load_task_object(session_name, folder=paths.task)
     assert task
 
     # Load metadata file
@@ -43,11 +44,13 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
     assert metadata
 
     # Load the electrode information
+    electrodes = Electrodes()
+    # If there is detailed electrode information to load, do so here
     if SETTINGS['ADD_ELECTRODES']:
-
-        # TEMP: example loads dummy data for electrodes
-        electrodes = Electrodes()
-        electrodes.add_bundle('bundle1', 'loc1')
+        pass
+    # Otherwise, define a placeholder electrodes object
+    else:
+        electrodes.set_placeholder()
 
     # Get a list of the available spike files
     if SETTINGS['ADD_UNITS']:
@@ -121,12 +124,12 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
 
     ## RECORDING DEVICE INFORMATION
 
-    if SETTINGS['ADD_ELECTRODES']:
+    if SETTINGS['ADD_ELECTRODES'] or SETTINGS['ADD_UNITS']:
 
         # Create device object
-        device = nwbfile.create_device(metadata['device']['name'],
-                                       metadata['device']['description'],
-                                       metadata['device']['manufacturer'])
+        device = nwbfile.create_device(metadata['device']['device_name'],
+                                       metadata['device']['device_description'],
+                                       metadata['device']['device_manufacturer'])
 
         # Add electrode bundles and electrode information
         for bundle_name, bundle_location in electrodes:
@@ -329,7 +332,7 @@ def convert_data(SESSION=SESSION, SETTINGS=SETTINGS):
     # Save out NWB file
     save_nwbfile(nwbfile, session_name, folder=paths.nwb)
 
-    print(SETTINGS['VERBOSE'], 'Data converted for: {}'.format(session_name), 0)
+    print_status(SETTINGS['VERBOSE'], 'Data converted for: \t{}'.format(session_name), 0)
 
 
 if __name__ == '__main__':
