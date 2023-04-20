@@ -1,6 +1,6 @@
 # Notebooks
 
-The following notebooks are template for converting data to NWB.
+The following notebooks are templates for converting data to NWB.
 
 ### 00-Intro&Metadata
 
@@ -12,7 +12,7 @@ This notebook steps through converting a session of data to NWB.
 
 ### 02-RunConversion
 
-This notebook runs the processes to convert the data to NWB.
+This notebook runs the processes to convert sessions of data to NWB.
 
 ### A1-ExploreData
 
