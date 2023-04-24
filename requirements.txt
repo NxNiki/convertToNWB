@@ -1,3 +1,3 @@
 numpy
 pynwb
-convnwb @ git+https://github.com/JacobsSU/convnwb.git@main
+convnwb @ git+https://github.com/HSUPipeline/convnwb.git@main

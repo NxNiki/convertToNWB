@@ -25,7 +25,7 @@ Any such processing and analysis steps should be done separate to this data conv
 
 Note that this template does not itself implement any utilities - the underlying
 general functionality is all implemented in the
-[convnwb](https://github.com/JacobsSU/convnwb)
+[convnwb](https://github.com/HSUPipeline/convnwb)
 module. This module is then aliased into the `conv` folder, on top
 of which any needed customizations and additions can be made.
 
@@ -73,7 +73,7 @@ This template requires Python >= 3.7.
 As well as typical scientific Python packages, dependencies include:
 
 - [pynwb](https://github.com/NeurodataWithoutBorders/pynwb)
-- [convnwb](https://github.com/JacobsSU/convnwb)
+- [convnwb](https://github.com/HSUPipeline/convnwb)
 
 The full list of dependencies is listed in `requirements.txt`.
 

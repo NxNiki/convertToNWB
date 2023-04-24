@@ -9,7 +9,7 @@ experiment_description: XX
 institution: Columbia University
 keywords:
   - XX
-source_script: https://github.com/JacobsSU/ConvertXX/
+source_script: https://github.com/HSUPipeline/ConvertXX/
 source_script_file_name: XX
 data_collection: XX
 stimulus_notes: XX
