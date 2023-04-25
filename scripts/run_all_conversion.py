@@ -1,12 +1,9 @@
 """Run conversion on all sessions."""
 
-import traceback
-
 import sys
 sys.path.append('..')
-from conv import Paths
-from conv.io import get_files, make_session_name, save_txt
-from conv.utils import print_status
+from conv import Paths, print_status, catch_error
+from conv.io import get_files, make_session_name
 
 # Import processing functions (from local scripts)
 from prepare_data import prepare_data
@@ -70,10 +67,8 @@ def run_all_conversions():
 
             except Exception as excp:
 
-                if not GROUP['CONTINUE_ON_FAIL']:
-                    raise
-                print_status(SETTINGS['VERBOSE'], 'ISSUE CONVERTING SESSION: \t{}'.format(session_name), 0)
-                save_txt(traceback.format_exc(), session_name, folder=paths.nwb / 'zFailed')
+                catch_error(GROUP['CONTINUE_ON_FAIL'], session_name, paths.nwb / 'zFailed',
+                            SETTINGS['VERBOSE'], 'ISSUE CONVERTING SESSION: \t{}')
 
     msg = '\n\n FINISHED CONVERSIONS FOR - {}\n\n'.format(EXPERIMENT)
     print_status(SETTINGS['VERBOSE'], msg, 0)

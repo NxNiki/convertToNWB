@@ -3,9 +3,8 @@
 # Add local folder with `conv` module
 import sys
 sys.path.append('..')
-from conv import Paths
+from conv import Paths, print_status
 from conv.io import get_files, make_file_list, missing_files
-from conv.utils import print_status
 
 # Import settings
 from settings import PROJECT_PATH, EXPERIMENT
