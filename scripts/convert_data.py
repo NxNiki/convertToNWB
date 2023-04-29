@@ -10,10 +10,10 @@ from pynwb.ecephys import ElectricalSeries
 # Add local folder with `conv` module
 import sys
 sys.path.append('..')
-from conv import Paths, Electrodes, print_status
+from conv import Paths, Electrodes
 from conv.io import (get_files, make_session_name, load_config,
                      load_task_object, open_h5file, save_nwbfile)
-from conv.utils import incrementer, get_current_date, convert_time_to_date
+from conv.utils import print_status, incrementer, get_current_date, convert_time_to_date
 
 # Import settings (from local folder)
 from settings import PROJECT_PATH, SESSION, SETTINGS

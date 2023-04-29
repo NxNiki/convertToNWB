@@ -2,8 +2,9 @@
 
 import sys
 sys.path.append('..')
-from conv import Paths, print_status, catch_error
+from conv import Paths
 from conv.io import get_files, make_session_name
+from conv.utils import print_status, catch_error
 
 # Import processing functions (from local scripts)
 from prepare_data import prepare_data
