@@ -2,6 +2,11 @@
 
 This file tracks changes across development of the `ConvertTEMPLATE` repository.
 
+## 0.3.X Version
+
+The `0.3.X` series, starting with the `0.3.0` tagged release is a minor update to the
+stable release version of the template, following the `0.3.0` release of `convnwb`.
+
 ## 0.2.X Version
 
 The `0.2.X` series, starting with the `0.2.0` tagged release is a minor update to the
