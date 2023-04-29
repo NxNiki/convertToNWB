@@ -5,10 +5,14 @@ Template structure for converting data to NWB format.
 [![Analysis](https://img.shields.io/badge/analysis-AnalyzeTEMPLATE-lightgrey)](https://github.com/HSUPipeline/AnalyzeTEMPLATE)
 [![Template](https://img.shields.io/badge/template-HSUPipeline/ConvertTEMPLATE-yellow.svg)](https://github.com/HSUPipeline/ConvertTEMPLATE)
 
-## Overview
+## TEMPLATE DESCRIPTION
 
 This repository provides a template for managing and converting data files into the
 [neurodata without borders](https://www.nwb.org/) format.
+
+Note: if copying this template for use, this section can be removed.
+
+### Description
 
 Specifically, this template is designed for converting human single-unit data collected
 from implanted microwires along with a task for which behavioural data and task information
@@ -24,7 +28,7 @@ To do so, this template includes:
 Note that this template / procedure does not include any processing of the data, such as spike sorting.
 Any such processing and analysis steps should be done separate to this data conversion (and can be applied before or after).
 
-## Relation to `convnwb`
+### Relation to `convnwb`
 
 Note that this template does not itself implement any utilities - the underlying
 general functionality is all implemented in the
@@ -32,7 +36,23 @@ general functionality is all implemented in the
 module. This module is then aliased into the `conv` folder, on top
 of which any needed customizations and additions can be made.
 
-## How to use this template
+### Data Organization
+
+This template doesn't assume any particular file type or structure or structure within files,
+and should be applicable to a broad range of recording files.
+
+Files to be processed will need to be organized into a consistent layout,
+which should follow the directory structure used by `convnwb`.
+
+For neural data, this template does not include IO functions for raw data files,
+and custom IO procedures may need to be updated / added. For this see
+[neo](https://github.com/NeuralEnsemble/python-neo).
+
+For behavioral data, this template is generally geared towards parsing task
+related data from a logfile that is saved out into a txt file, which can be
+parsed line-by-line. For other formats of behavioral data, customization may be needed.
+
+### How to use this template
 
 In order to apply this template to a new task, the following updates are needed:
 
@@ -69,9 +89,21 @@ For customization over and above what is detailed above, additional changes may 
 to the stored metadata and/or processing code.
 See the `Repository Layout` Section for information.
 
+## Overview
+
+**Provide an overview of the analysis project here, for example:**
+
+This repository is for managing and converting data files for the XX task,
+processing and converting the data into the
+[neurodata without borders](https://www.nwb.org/) format.
+
+This conversion follows the [ConvertTEMPLATE](https://github.com/HSUPipeline/ConvertTEMPLATE).
+
 ## Requirements
 
-This template requires Python >= 3.7.
+**Fill in any extra requirements here.**
+
+This repository requires Python >= 3.7.
 
 As well as typical scientific Python packages, dependencies include:
 
@@ -79,26 +111,6 @@ As well as typical scientific Python packages, dependencies include:
 - [convnwb](https://github.com/HSUPipeline/convnwb)
 
 The full list of dependencies is listed in `requirements.txt`.
-
-Note that extra dependencies may need to be added when using this template for a task / dataset
-(for example, requiring custom tools to load data files), as well as for certain additional
-functionality to explore the data.
-
-## Data Organization
-
-This template doesn't assume any particular file type or structure or structure within files,
-and should be applicable to a broad range of recording files.
-
-Files to be processed will need to be organized into a consistent layout,
-which should follow the directory structure used by `convnwb`.
-
-For neural data, this template does not include IO functions for raw data files,
-and custom IO procedures may need to be updated / added. For this see
-[neo](https://github.com/NeuralEnsemble/python-neo).
-
-For behavioral data, this template is generally geared towards parsing task
-related data from a logfile that is saved out into a txt file, which can be
-parsed line-by-line. For other formats of behavioral data, customization may be needed.
 
 ## Repository Layout
 
@@ -108,3 +120,12 @@ This repository is set up in the following way:
 - `notebooks/` contains notebooks that demonstrate examples of data conversion
 - `metadata/` contains config files that define metadata fields and task descriptions
 - `scripts/` contains stand alone scripts to process data files
+
+## Run Procedures
+
+Data files can be processed by running the scripts available in the `scripts` folder.
+
+The procedures are also detailed through the `notebooks`.
+
+For a detailed description of how this approach works, and instructions on making
+updates, see the [ConvertTEMPLATE](https://github.com/HSUPipeline/ConvertTEMPLATE).
