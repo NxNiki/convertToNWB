@@ -2,6 +2,9 @@
 
 Template structure for converting data to NWB format.
 
+[![Analysis](https://img.shields.io/badge/analysis-AnalyzeTEMPLATE-lightgrey)](https://github.com/HSUPipeline/AnalyzeTEMPLATE)
+[![Template](https://img.shields.io/badge/template-HSUPipeline/ConvertTEMPLATE-yellow.svg)](https://github.com/HSUPipeline/ConvertTEMPLATE)
+
 ## Overview
 
 This repository provides a template for managing and converting data files into the
