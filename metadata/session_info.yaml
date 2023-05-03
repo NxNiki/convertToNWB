@@ -1,0 +1,40 @@
+## Session related information
+
+# Identifier
+identifier: XX
+
+# Session information
+session_id: XX
+session_start_time: 1111/11/11
+session_description: >-
+    This file contains a recorded session of the XX task, a XX,
+    from a human neurosurgical patient with microwires that record single-unit activity.
+
+# Experiment / task information
+experiment_name: XX
+experiment_description: >-
+    The XX task is a XX.
+    Subjects do XX.
+experiment_run_version: XX
+experiment_run_platform: Unity
+experiment_language: english
+
+# Experimenters
+institution: Columbia University
+lab: Electrophysiology, Memory, and Navigation Laboratory
+experimenter:
+  - XX
+data_collection: XX
+
+# Project metadata
+keywords:
+  - human single units
+related_publications: XX
+
+# Source script information
+source_script: https://github.com/HSUPipeline/ConvertXX/
+source_script_file_name: XX
+
+# Stimulus information
+stimulus_notes: >-
+    The stimuli are XX.

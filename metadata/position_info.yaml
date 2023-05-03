@@ -1,4 +1,6 @@
-# Position related information
+## Position related information
+
+# Player position
 player_position: Position of the player.
 head_direction: The head direction of the player, in degrees.
 
@@ -9,4 +11,4 @@ derived_position_measures: Derived measures related to position data.
 # Arena definition
 arena_center: Center of the arena.
 arena_x_range: Navigable range of the x-axis of the arena [min, max].
-arena_z_range: Navigable range of the z-axis of the arena [min, max].
+arena_y_range: Navigable range of the y-axis of the arena [min, max].

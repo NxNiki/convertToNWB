@@ -1,6 +1,10 @@
-# Subject information
+## Subject information
+
+# Subject specific information
 age: XX
 sex: XX
+
+# Group level information
 species: Homo sapiens
 description:  >-
     The subject is a clinical patient with intractable epilepsy undergoing pre-surgical

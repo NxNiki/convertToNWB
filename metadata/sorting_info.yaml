@@ -1,6 +1,10 @@
-# Spike sorting information
+## Spike sorting information
+
+# Spike sorter information
 sorter: XX
 version: XX
+settings: XX
+
+# Sorting processing information
 done_by: XX
 date: XX
-settings: XX

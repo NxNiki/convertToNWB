@@ -1,3 +1,5 @@
+## Unit related information
+
 # Unit information - fields to add to unit data
 channel: The recording channel of this unit.
 location: The anatomical location of this unit.
