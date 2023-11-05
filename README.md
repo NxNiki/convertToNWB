@@ -2,9 +2,9 @@
 
 Template structure for converting data to NWB format.
 
-[![Sort](https://img.shields.io/badge/analysis-AnalyzeTEMPLATE-lightgrey)](https://github.com/HSUPipeline/SortTEMPLATE)
-[![Analysis](https://img.shields.io/badge/analysis-AnalyzeTEMPLATE-lightgrey)](https://github.com/HSUPipeline/AnalyzeTEMPLATE)
 [![Template](https://img.shields.io/badge/template-HSUPipeline/ConvertTEMPLATE-yellow.svg)](https://github.com/HSUPipeline/ConvertTEMPLATE)
+[![Sort](https://img.shields.io/badge/analysis-SortTEMPLATE-lightgrey)](https://github.com/HSUPipeline/SortTEMPLATE)
+[![Analysis](https://img.shields.io/badge/analysis-AnalyzeTEMPLATE-lightgrey)](https://github.com/HSUPipeline/AnalyzeTEMPLATE)
 
 ## TEMPLATE DESCRIPTION
 
@@ -18,7 +18,7 @@ layout from
 
 For information on how to use this template in a project, see the
 [HSUPipeline Guide](https://github.com/HSUPipeline/Overview/blob/main/Guide.md).
-s
+
 Note: if copying this template for use, this section can be removed.
 
 ## Overview
