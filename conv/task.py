@@ -1,11 +1,8 @@
 """Task class."""
 
 from convnwb.objects.task import TaskBase
-
 from convnwb.plts.timestamps import plot_alignment
 
-###################################################################################################
-###################################################################################################
 
 class Task(TaskBase):
     """Object for collecting task data."""
@@ -21,7 +18,6 @@ class Task(TaskBase):
         self.phase_times = {...}
         self.trial = {...}
         self.responses = {...}
-
 
     def plot_sync_allignment(self, n_pulses=100):
         """Plots alignment of the synchronization pulses.

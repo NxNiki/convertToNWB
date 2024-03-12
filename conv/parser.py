@@ -5,8 +5,6 @@ from conv.task import Task
 from conv.process import process_task
 from conv.utils import print_status
 
-###################################################################################################
-###################################################################################################
 
 def process_session(paths, process=False, task=None, verbose=True):
     """Process a session of data.

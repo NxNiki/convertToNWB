@@ -9,8 +9,6 @@ from convnwb.utils.log import print_status
 # Import local code
 # from conv.measures import ...
 
-###################################################################################################
-###################################################################################################
 
 def process_task(task, verbose=True):
     """Process task information.
