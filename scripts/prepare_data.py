@@ -2,16 +2,13 @@
 
 # Add local folder with `conv` module
 import sys
-sys.path.append('..')
 from conv import Paths, process_session
 from conv.io import get_files, make_session_name, load_configs, save_config, save_task_object
 from conv.utils import print_status
-
 # Import settings (from local folder)
 from settings import PROJECT_PATH, SESSION, SETTINGS
+sys.path.append('..')
 
-###################################################################################################
-###################################################################################################
 
 def prepare_data(SESSION=SESSION, SETTINGS=SETTINGS):
     """Prepare a session of data for NWB conversion."""
@@ -25,14 +22,14 @@ def prepare_data(SESSION=SESSION, SETTINGS=SETTINGS):
     print_status(SETTINGS['VERBOSE'], '\nPREPARING XX DATA\n', 0)
     print_status(SETTINGS['VERBOSE'], 'Preparing data for {}'.format(session_name), 0)
 
-    ## PARSE LOG FILE
+    # PARSE LOG FILE
 
     if SETTINGS['PARSE_LOG']:
 
         task = process_session(paths, process=True, verbose=SETTINGS['VERBOSE'])
         save_task_object(task, session_name, folder=paths.task)
 
-    ## COLLECT METADATA
+    # COLLECT METADATA
 
     print_status(SETTINGS['VERBOSE'], 'preparing metadata files...', 1)
 
