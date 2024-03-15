@@ -45,7 +45,7 @@ def process_task(task, verbose=True):
     return task
 
 
-def process_time_info(task):
+def process_time_info(task, verbose=True):
     """Process time related information."""
 
     print_status(verbose, 'timestamps...', 2)
@@ -59,7 +59,7 @@ def process_time_info(task):
     return task
 
 
-def process_trial_info(task):
+def process_trial_info(task, verbose=True):
     """Process per trial task related information."""
 
     print_status(verbose, 'trial info...', 2)
@@ -69,7 +69,7 @@ def process_trial_info(task):
     return task
 
 
-def process_stimulus_info(task):
+def process_stimulus_info(task, verbose=True):
     """Process stimulus related information."""
 
     print_status(verbose, 'stimulus info...', 2)
@@ -79,7 +79,7 @@ def process_stimulus_info(task):
     return task
 
 
-def process_position_info(task):
+def process_position_info(task, verbose=True):
     """Process continuously sampled position related information."""
 
     print_status(verbose, 'position info...', 2)
@@ -89,7 +89,7 @@ def process_position_info(task):
     return task
 
 
-def process_error_info(task):
+def process_error_info(task, verbose=True):
     """Process per trial error related information."""
 
     print_status(verbose, 'error info...', 2)

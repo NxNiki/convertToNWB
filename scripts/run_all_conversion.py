@@ -1,20 +1,17 @@
 """Run conversion on all sessions."""
 
 import sys
-sys.path.append('..')
 from conv import Paths
 from conv.io import get_files, make_session_name
 from conv.utils import print_status, catch_error
-
 # Import processing functions (from local scripts)
 from prepare_data import prepare_data
 from convert_data import convert_data
-
 # Import settings
 from settings import PROJECT_PATH, EXPERIMENT, SETTINGS, GROUP, SKIP
 
-###################################################################################################
-###################################################################################################
+sys.path.append('..')
+
 
 def run_all_conversions():
     """Run NWB conversion on all available TH sessions."""
@@ -59,7 +56,6 @@ def run_all_conversions():
                 continue
 
             try:
-
                 # Prepare data
                 prepare_data(SESSION=SESSION, SETTINGS=SETTINGS)
 
@@ -67,7 +63,6 @@ def run_all_conversions():
                 convert_data(SESSION=SESSION, SETTINGS=SETTINGS)
 
             except Exception as excp:
-
                 catch_error(GROUP['CONTINUE_ON_FAIL'], session_name, paths.nwb / 'zFailed',
                             SETTINGS['VERBOSE'], 'ISSUE CONVERTING SESSION: \t{}')
 

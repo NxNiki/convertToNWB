@@ -1,34 +1,32 @@
 """Settings for converting sessions."""
 
 ###################################################################################################
-## PATH SETTINGS
+# PATH SETTINGS
 
 PROJECT_PATH = ''
 
 ###################################################################################################
-## SUBJECT SETTINGS
+# SUBJECT SETTINGS
 
 SUBJECT = ''
 EXPERIMENT = ''
 SESSION = ''
 
 SESSION = {
-    'SUBJECT' : SUBJECT,
-    'EXPERIMENT' : EXPERIMENT,
-    'SESSION' : SESSION,
+    'SUBJECT': SUBJECT,
+    'EXPERIMENT': EXPERIMENT,
+    'SESSION': SESSION,
 }
 
 ###################################################################################################
-## DEFINE PROPERTIES OF THE SESSION
-
-...
+# DEFINE PROPERTIES OF THE SESSION
 
 PROPERTIES = {
-    '...' : ...,
+    '...': ...,
 }
 
 ###################################################################################################
-## DEFINE RUN SETTINGS
+# DEFINE RUN SETTINGS
 
 # Logfile settings
 PARSE_LOG = True
@@ -47,39 +45,38 @@ CHANGE_TIME_UNIT = True
 DROP_BEFORE_TASK = True
 
 SETTINGS = {
-
     # Run settings
-    'VERBOSE' : VERBOSE,
+    'VERBOSE': VERBOSE,
 
     # Logfile settings
-    'PARSE_LOG' : PARSE_LOG,
+    'PARSE_LOG': PARSE_LOG,
 
     # What to add
-    'ADD_ELECTRODES' : ADD_ELECTRODES,
-    'ADD_UNITS' : ADD_UNITS,
-    'ADD_LFP' : ADD_LFP,
+    'ADD_ELECTRODES': ADD_ELECTRODES,
+    'ADD_UNITS': ADD_UNITS,
+    'ADD_LFP': ADD_LFP,
 
     # Time related settings
-    'RESET_TIME' : RESET_TIME,
-    'CHANGE_TIME_UNIT' : CHANGE_TIME_UNIT,
-    'DROP_BEFORE_TASK' : DROP_BEFORE_TASK,
+    'RESET_TIME': RESET_TIME,
+    'CHANGE_TIME_UNIT': CHANGE_TIME_UNIT,
+    'DROP_BEFORE_TASK': DROP_BEFORE_TASK,
 }
 
 ###################################################################################################
-## DEFINE GROUP LEVEL SETTINGS
+# DEFINE GROUP LEVEL SETTINGS
 
 SKIP_ALREADY_RUN = False
 CONTINUE_ON_FAIL = False
 
 GROUP = {
 
-    'SKIP_ALREADY_RUN' : SKIP_ALREADY_RUN,
-    'CONTINUE_ON_FAIL' : CONTINUE_ON_FAIL,
+    'SKIP_ALREADY_RUN': SKIP_ALREADY_RUN,
+    'CONTINUE_ON_FAIL': CONTINUE_ON_FAIL,
 
 }
 
 ###################################################################################################
-## DEFINE SKIP SESSIONS
+# DEFINE SKIP SESSIONS
 
 SKIP_SUBJECTS = [
     '...',
@@ -90,6 +87,6 @@ SKIP_SESSIONS = [
 ]
 
 SKIP = {
-    'SUBJECTS' : SKIP_SUBJECTS,
-    'SESSIONS' : SKIP_SESSIONS,
+    'SUBJECTS': SKIP_SUBJECTS,
+    'SESSIONS': SKIP_SESSIONS,
 }

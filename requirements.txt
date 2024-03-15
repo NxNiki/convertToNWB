@@ -1,3 +1,7 @@
 numpy
 pynwb
+neuroconv
+dateutil
+spikeinterface
+packaging
 convnwb @ git+https://github.com/HSUPipeline/convnwb.git@main

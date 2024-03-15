@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "convert spike data to NWB format"
+name = "convert Neuralynx to NWB"
 version = "0.1.0"
 description = "convert electrophsiology data (neuralyx and blackrock) to NWB format"
 authors = ["Xin Niu <michaelniki1988@gmail.com>"]
@@ -12,4 +12,8 @@ build-backend = "poetry.core.masonry.api"
 python = "^3.9"
 numpy = "^1.20.0"
 pynwb = "^2.5.0"
+neuroconv = "^0.4.7"
 convnwb = { git = "https://github.com/HSUPipeline/convnwb" }
+packaging = "^24.0"
+spikeinterface = "^0.100.1"
+
