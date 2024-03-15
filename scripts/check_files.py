@@ -2,11 +2,11 @@
 
 # Add local folder with `conv` module
 import sys
+sys.path.append('..')
 from conv import Paths
 from conv.io import get_files, make_file_list, missing_files
 from conv.utils import print_status
 from settings import PROJECT_PATH, EXPERIMENT
-sys.path.append('..')
 
 
 def check_files():

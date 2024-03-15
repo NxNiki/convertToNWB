@@ -7,5 +7,3 @@ from convnwb.utils.validate import validate_nwb
 from convnwb.utils.log import print_status
 from convnwb.utils.run import catch_error
 
-###################################################################################################
-###################################################################################################

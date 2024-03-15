@@ -16,4 +16,6 @@ neuroconv = "^0.4.7"
 convnwb = { git = "https://github.com/HSUPipeline/convnwb" }
 packaging = "^24.0"
 spikeinterface = "^0.100.1"
+jupyterlab = "^4.1.0"
+# dateutil = "^2.9.0"
 

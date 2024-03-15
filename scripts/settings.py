@@ -3,13 +3,14 @@
 ###################################################################################################
 # PATH SETTINGS
 
-PROJECT_PATH = ''
+PROJECT_PATH = '/Users/XinNiuAdmin/HoffmanMount/data/nwb_projects/movie_paradigm'
+NEURALYNX_PATH = '/Volumes/DATA/NLData/'
 
 ###################################################################################################
 # SUBJECT SETTINGS
 
 SUBJECT = ''
-EXPERIMENT = ''
+EXPERIMENT = 'movie_paradigm'
 SESSION = ''
 
 SESSION = {
@@ -29,7 +30,7 @@ PROPERTIES = {
 # DEFINE RUN SETTINGS
 
 # Logfile settings
-PARSE_LOG = True
+PARSE_LOG = False
 
 # Run settings
 VERBOSE = True

@@ -5,9 +5,9 @@ identifier: XX
 
 # Session information
 session_id: XX
-session_start_time: 1111/11/11
+session_start_time: XX
 session_description: >-
-    This file contains a recorded session of the XX task, a XX,
+    This file contains a recorded session of the movie paradigm task
     from a human neurosurgical patient with microwires that record single-unit activity.
 
 # Experiment / task information
@@ -20,8 +20,8 @@ experiment_run_platform: Unity
 experiment_language: english
 
 # Experimenters
-institution: Columbia University
-lab: Electrophysiology, Memory, and Navigation Laboratory
+institution: UCLA health
+lab: Cognitive Neurophysiology Laboratory
 experimenter:
   - XX
 data_collection: XX
@@ -32,8 +32,8 @@ keywords:
 related_publications: XX
 
 # Source script information
-source_script: https://github.com/HSUPipeline/ConvertXX/
-source_script_file_name: XX
+source_script: https://github.com/NxNiki/convertToNWB
+source_script_file_name: 
 
 # Stimulus information
 stimulus_notes: >-
