@@ -19,3 +19,23 @@ spikeinterface = "^0.100.1"
 jupyterlab = "^4.1.0"
 python-dateutil = "^2.9.0"
 
+[tool.pre-commit]
+version = "2.13.0"
+exclude = ".venv|_build|build|dist"
+hooks = [
+    "mypy",
+    "black"
+]
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.black]
+line-length = 120
+target-version = ['py39']
+
+[tool.poetry.scripts]
+pre-commit = 'pre_commit_hooks:run'
+
+
+
