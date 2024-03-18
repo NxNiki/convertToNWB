@@ -23,6 +23,7 @@ python-dateutil = "^2.9.0"
 version = "2.13.0"
 exclude = ".venv|_build|build|dist"
 hooks = [
+    "isort",
     "mypy",
     "black"
 ]
