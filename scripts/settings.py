@@ -1,5 +1,11 @@
 """Settings for converting sessions."""
 
+
+VALID_DEVICE = {
+    'neurolynx': 'neuralynx',
+    'blackrock': 'blackrock'
+}
+
 ###################################################################################################
 # PATH SETTINGS
 

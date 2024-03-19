@@ -982,13 +982,13 @@ test = ["ipykernel", "pre-commit", "pytest (<8)", "pytest-cov", "pytest-timeout"
 
 [[package]]
 name = "jupyter-events"
-version = "0.9.1"
+version = "0.10.0"
 description = "Jupyter Event System library"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "jupyter_events-0.9.1-py3-none-any.whl", hash = "sha256:e51f43d2c25c2ddf02d7f7a5045f71fc1d5cb5ad04ef6db20da961c077654b9b"},
-    {file = "jupyter_events-0.9.1.tar.gz", hash = "sha256:a52e86f59eb317ee71ff2d7500c94b963b8a24f0b7a1517e2e653e24258e15c7"},
+    {file = "jupyter_events-0.10.0-py3-none-any.whl", hash = "sha256:4b72130875e59d57716d327ea70d3ebc3af1944d3717e5a498b8a06c6c159960"},
+    {file = "jupyter_events-0.10.0.tar.gz", hash = "sha256:670b8229d3cc882ec782144ed22e0d29e1c2d639263f92ca8383e66682845e22"},
 ]
 
 [package.dependencies]
@@ -1322,14 +1322,12 @@ test = ["pep440", "pre-commit", "pytest", "testpath"]
 
 [[package]]
 name = "neo"
-version = "0.13.0"
+version = "0.13.1.dev0"
 description = "Neo is a package for representing electrophysiology data in Python, together with support for reading a wide range of neurophysiology file formats"
 optional = false
 python-versions = ">=3.8"
-files = [
-    {file = "neo-0.13.0-py3-none-any.whl", hash = "sha256:3a380de2693306acab3253ee9d69720dfcc0c22ae634c85e34cdfb25bc8d5e5d"},
-    {file = "neo-0.13.0.tar.gz", hash = "sha256:5675d1fa381a53c2c7eeb8b5e929ec0399de20bb0b52453e1b99ec6d66dc91f3"},
-]
+files = []
+develop = false
 
 [package.dependencies]
 numpy = ">=1.19.5"
@@ -1337,7 +1335,7 @@ packaging = "*"
 quantities = ">=0.14.1"
 
 [package.extras]
-all = ["coverage", "coveralls", "dhn-med-py (>=1.0.0)", "h5py", "igor2", "ipython", "joblib (>=1.0.0)", "klusta", "matplotlib", "nixio (>=1.5.0)", "pillow", "probeinterface", "pyedflib", "pynwb", "pytest", "pytest-cov", "scipy (>=1.0.0)", "sonpy", "tqdm", "wenv", "zugbruecke (>=0.2)"]
+all = ["coverage", "coveralls", "dhn_med_py (>=1.0.0)", "h5py", "igor2", "ipython", "joblib (>=1.0.0)", "klusta", "matplotlib", "nixio (>=1.5.0)", "pillow", "probeinterface", "pyedflib", "pynwb", "pytest", "pytest-cov", "scipy (>=1.0.0)", "sonpy", "tqdm", "wenv", "zugbruecke (>=0.2)"]
 biocam = ["h5py"]
 ced = ["sonpy"]
 dev = ["black", "build", "twine"]
@@ -1347,14 +1345,20 @@ igorproio = ["igor2"]
 iocache = ["joblib (>=1.0.0)"]
 kwikio = ["klusta"]
 maxwell = ["h5py"]
-med = ["dhn-med-py (>=1.0.0)"]
+med = ["dhn_med_py (>=1.0.0)"]
 neomatlabio = ["scipy (>=1.0.0)"]
 nixio = ["nixio (>=1.5.0)"]
 nwb = ["pynwb"]
 plexon2 = ["wenv", "zugbruecke (>=0.2)"]
 stimfitio = ["stfio"]
-test = ["coverage", "coveralls", "dhn-med-py (>=1.0.0)", "h5py", "igor2", "ipython", "joblib (>=1.0.0)", "klusta", "matplotlib", "nixio", "pillow", "probeinterface", "pyedflib", "pynwb", "pytest", "pytest-cov", "scipy (>=1.0.0)", "sonpy", "tqdm", "wenv", "zugbruecke (>=0.2)"]
+test = ["coverage", "coveralls", "dhn_med_py (>=1.0.0)", "h5py", "igor2", "ipython", "joblib (>=1.0.0)", "klusta", "matplotlib", "nixio", "pillow", "probeinterface", "pyedflib", "pynwb", "pytest", "pytest-cov", "scipy (>=1.0.0)", "sonpy", "tqdm", "wenv", "zugbruecke (>=0.2)"]
 tiffio = ["pillow"]
+
+[package.source]
+type = "git"
+url = "git@github.com:NxNiki/python-neo.git"
+reference = "multiple_filenames"
+resolved_reference = "fb84fe7e7324af2aedad6616847781a8789c8ba3"
 
 [[package]]
 name = "nest-asyncio"
@@ -2516,13 +2520,13 @@ files = [
 
 [[package]]
 name = "spikeinterface"
-version = "0.100.1"
+version = "0.100.2"
 description = "Python toolkit for analysis, visualization, and comparison of spike sorting output"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "spikeinterface-0.100.1-py3-none-any.whl", hash = "sha256:428b2875a9caa91cd11cb2f2b4ed01960d8ce22ce8a3bb2922b5b0132543312a"},
-    {file = "spikeinterface-0.100.1.tar.gz", hash = "sha256:f3903e4cec8c7f9a069297df4fd048a25930ab7d67023cf5ae555f145a1a6c21"},
+    {file = "spikeinterface-0.100.2-py3-none-any.whl", hash = "sha256:aa85841539e2c14bfe261d29974f31012760355dab7d734217f112ae69e7b365"},
+    {file = "spikeinterface-0.100.2.tar.gz", hash = "sha256:01dedd3decfa4220f6edf2cdc56392c54d72c34a7500acedd9b82a3e417b5fcc"},
 ]
 
 [package.dependencies]
@@ -2835,4 +2839,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "1b921c03dfad1a6527ce65e46051f8c342aa09c833db25cbb57ed336cae89733"
+content-hash = "16bb9452f7bbba7fe31b1f05c975c2441744a8f119fa58420c43e5c9eb852b4d"
