@@ -1,7 +1,9 @@
 numpy
+pandas
 pynwb
 neuroconv
 python-dateutil
 spikeinterface
 packaging
 convnwb @ git+https://github.com/HSUPipeline/convnwb.git@main
+neo >= 0.13.0

@@ -11,6 +11,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.dependencies]
 python = "^3.9"
 numpy = "^1.20.0"
+pandas = "^2.1.4"
 pynwb = "^2.5.0"
 neuroconv = "^0.4.7"
 convnwb = { git = "https://github.com/HSUPipeline/convnwb" }
@@ -18,6 +19,8 @@ packaging = "^24.0"
 spikeinterface = "^0.100.1"
 jupyterlab = "^4.1.0"
 python-dateutil = "^2.9.0"
+# neo = "^0.13.0"
+neo = { git = "git@github.com:NxNiki/python-neo.git", branch = "multiple_filenames" }
 
 [tool.pre-commit]
 version = "2.13.0"
@@ -25,7 +28,8 @@ exclude = ".venv|_build|build|dist"
 hooks = [
     "isort",
     "mypy",
-    "black"
+    "black",
+    "pylint"
 ]
 
 [tool.mypy]
