@@ -1,9 +1,11 @@
 """
 create files in .nwb format for the movie paradigm experiments
 """
+import warnings
 from typing import List
 from settings import VALID_DEVICE
 import os
+import glob
 import re
 
 
@@ -28,6 +30,8 @@ class MovieParadigm:
         self.input_folders = input_folders
         self.project_folder = project_folder
         self.device = device
+        self.micro_channels = []
+        self.macro_channels = []
 
     @property
     def patient_id(self) -> str:
@@ -55,14 +59,48 @@ class MovieParadigm:
         confirm the patient id are same in the input folders.
 
         Returns:
-            A list of dicts with fields patient, experiments, and channels. For each
+            A list of dicts with fields patient, experiments, and channels. For each session, the dict has the following
+            fields:
+                subject_id
+                experiment
+                date
+                micro
+                macro
         """
 
         exp_info = []
-        for d in self.input_folders:
+        for folder in self.input_folders:
+            metadata = re.match(
+                r".*/(?P<subject_id>D\d+)/(?P<experiment>EXP\d+_\w+)/(?P<date>\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2})/",
+                folder,
+            ).groupdict()
 
+            # list micro channels:
+            micro_files = glob.glob(os.path.join(folder, r'G[A-D][1-9]*.ncs'))
+            macro_files = glob.glob(os.path.join(folder, r'[A-Z]+[1-9].ncs'))
 
+            micro_channels = {os.path.basename(f) for f in micro_files}
+            if not self.micro_channels:
+                self.micro_channels = micro_channels
+            elif self.micro_channels != micro_channels:
+                warnings.warn(f"micro channels not consistent across experiments!", category=UserWarning)
 
+            self.micro_channels |= micro_channels
+
+            macro_channels = {os.path.basename(f) for f in macro_files}
+            if not self.macro_channels:
+                self.macro_channels = macro_channels
+            elif self.macro_channels != macro_channels:
+                warnings.warn(f"macro channels not consistent across experiments!", category=UserWarning)
+
+            self.macro_channels |= macro_channels
+
+            metadata['micro'] = micro_files
+            metadata['macro'] = macro_files
+            exp_info.append(metadata)
+
+        self.micro_channels = sorted(list(self.micro_channels))
+        self.macro_channels = sorted(list(self.macro_channels))
 
         return exp_info
 
