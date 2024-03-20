@@ -22,6 +22,8 @@ class MovieParadigm:
 
             project_folder (str): The directory to save the converted .nwb files.
 
+            device (str): 'neuralynx' or 'blackrock'
+
 
         Returns:
             str: A greeting message that includes the input name.
@@ -29,8 +31,7 @@ class MovieParadigm:
 
         self.input_folders = input_folders
         self.project_folder = project_folder
-        self.device = device  # 'neuralynx' or 'blackrock'
-
+        self.device = device
 
     @property
     def patient_id(self) -> str:
@@ -55,9 +56,13 @@ class MovieParadigm:
             A list of dicts with fields patient, experiments, and channels. For each
         """
 
+        exp_info = []
+        for d in self.input_folders:
 
 
-        return subject_info
+
+
+        return exp_info
 
     def create_folder(self, subject_id, experiment):
         pass
