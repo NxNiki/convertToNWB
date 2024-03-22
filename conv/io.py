@@ -10,7 +10,7 @@ from convnwb.io.utils import get_files, make_session_name, make_file_list, missi
 import warnings
 from pathlib import Path
 from typing import List
-from settings import VALID_DEVICE
+from conv.settings import VALID_DEVICE
 import os
 import glob
 import re

@@ -1380,7 +1380,7 @@ tiffio = ["pillow"]
 type = "git"
 url = "git@github.com:NxNiki/python-neo.git"
 reference = "multiple_filenames"
-resolved_reference = "d1462c7cf7de8658d2ad4bf44c8d9e120058c92a"
+resolved_reference = "e50a1bb9d492b2ebeedfaeadbd184bba27357504"
 
 [[package]]
 name = "nest-asyncio"
