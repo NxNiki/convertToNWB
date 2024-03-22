@@ -7,7 +7,7 @@ from conv import Paths, process_session
 from conv.io import get_files, make_session_name, load_configs, save_config, save_task_object
 from conv.utils import print_status
 # Import settings (from local folder)
-from settings import PROJECT_PATH, SESSION, SETTINGS
+from conv.settings import PROJECT_PATH, SESSION, SETTINGS
 
 
 def prepare_data(SESSION=SESSION, SETTINGS=SETTINGS):

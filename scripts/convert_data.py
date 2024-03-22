@@ -16,7 +16,7 @@ from conv.io import (get_files, make_session_name, load_config,
 from conv.utils import print_status, incrementer, get_current_date, convert_time_to_date
 
 # Import settings (from local folder)
-from settings import PROJECT_PATH, SESSION, SETTINGS
+from conv.settings import PROJECT_PATH, SESSION, SETTINGS
 
 ###################################################################################################
 ###################################################################################################

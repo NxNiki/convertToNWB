@@ -8,7 +8,7 @@ from conv.utils import print_status, catch_error
 from prepare_data import prepare_data
 from convert_data import convert_data
 # Import settings
-from settings import PROJECT_PATH, EXPERIMENT, SETTINGS, GROUP, SKIP
+from conv.settings import PROJECT_PATH, EXPERIMENT, SETTINGS, GROUP, SKIP
 
 sys.path.append('..')
 

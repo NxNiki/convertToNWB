@@ -6,7 +6,7 @@ sys.path.append('..')
 from conv import Paths
 from conv.io import get_files, make_file_list, missing_files
 from conv.utils import print_status
-from settings import PROJECT_PATH, EXPERIMENT
+from conv.settings import PROJECT_PATH, EXPERIMENT
 
 
 def check_files():
