@@ -1,9 +1,9 @@
 [tool.poetry]
-name = "convert Neuralynx to NWB"
+name = "conv"
 version = "0.1.0"
 description = "convert electrophsiology data (neuralyx and blackrock) to NWB format"
 authors = ["Xin Niu <michaelniki1988@gmail.com>"]
-package-mode = false
+package-mode = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

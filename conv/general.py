@@ -2,6 +2,7 @@
 # 2020-01-09 JS
 
 import numpy as np
+import matplotlib.pyplot as plt
 import os
 
 
@@ -50,7 +51,7 @@ def natural_keys(text):
     example: alist.sort(key=natural_keys) sorts in human order
     '''
     import re
-    return [ atoi(c) for c in re.split(r'(\d+)', text) ]
+    return [atoi(c) for c in re.split(r'(\d+)', text)]
 
 
 def CMLReadDFRow(row):
@@ -64,7 +65,8 @@ def CMLReadDFRow(row):
                      montage=int(rd['montage']), localization=int(rd['localization']))
     # dirty secret: Readers reads: eegoffset, experiment, subject, and eegfile...but really should
     # pass in sessions since sampling rate could theoretically change...
-    
+
+
 def set_pubfig():
     # seaborn parameters for publication figures
     import seaborn as sb
@@ -75,6 +77,7 @@ def set_pubfig():
 #     plt.yticks(fontsize=14)
 #     plt.legend(fontsize=14)
 
+
 def plotHistoBar(values,start,end,bin_size,tick_range_divisor=1,normalize=False,log_scale=False):
     # e.g. plotHistoBar(lengths,0,0.2,0.01,tick_range=np.arange(0,0.2,0.05),normalize=True)
     # properly plot a histogram (with the values shown in the current bins!)
@@ -83,9 +86,9 @@ def plotHistoBar(values,start,end,bin_size,tick_range_divisor=1,normalize=False,
     #        normalize: True if you want proportion out of 1
     #        tick_range: np.arange where you wanted labeled ticks
     import matplotlib.pyplot as plt
-    bins = np.arange(start,end+bin_size+bin_size/1000,bin_size) # added bin+0.001 to show last bin and last tick
+    bins = np.arange(start,end+bin_size+bin_size/1000,bin_size)  # added bin+0.001 to show last bin and last tick
     if log_scale == True:
-        bins = np.logspace(np.log10(bins[1]),np.log10(bins[-1]),len(bins))
+        bins = np.logspace(np.log10(bins[1]), np.log10(bins[-1]), len(bins))
         
     hist = np.histogram(values,bins)
     if normalize == True:
@@ -93,7 +96,7 @@ def plotHistoBar(values,start,end,bin_size,tick_range_divisor=1,normalize=False,
     else:
         yvalues = hist[0]
     xr = (bins[1:]+bins[:-1])/2
-    ax = plt.bar(xr,yvalues,width=0.8*bin_size)
+    ax = plt.bar(xr, yvalues, width=0.8*bin_size)
 
     # get ticks
     wanted_ticks = np.arange(bins[0],bins[-1]+bin_size/1000,bin_size*tick_range_divisor)
@@ -150,15 +153,18 @@ def seFromProp(num_correct,trials):
     stderr = np.sqrt(num_correct*(1-num_correct/trials)/(trials-1)) / np.sqrt(trials)
     return stderr
 
-def findInd(idx): # note: np.where does this, but it returns a tuple and this returns a list...actually now an array
+
+def findInd(idx):  # note: np.where does this, but it returns a tuple and this returns a list...actually now an array
     # get the indices when given boolean vector (like find function in matlab)
-    idxs = [i for i,val in enumerate(idx) if val]
+    idxs = [i for i, val in enumerate(idx) if val]
     return np.array(idxs)
 
-def findAinB(A,B): # find where A is in B. this version works for lists and np arrays
+
+def findAinB(A,B):  # find where A is in B. this version works for lists and np arrays
     temp = set(A)
     inds = [i for i, val in enumerate(B) if val in temp] 
     return inds
+
 
 def findAinBlists(A,B):
     # gets indicies for A in B where B is a list of lists
@@ -169,6 +175,7 @@ def findAinBlists(A,B):
     inds = np.unique(inds)
     return inds
 
+
 def superVstack(a,b):
     # make it so you can vstack onto empty row
     if len(a)==0:
@@ -178,6 +185,7 @@ def superVstack(a,b):
     else:
         stack = np.vstack([a,b])
     return stack
+
 
 def findUniquePairs(a):
     # take a list of number pairs and return the unique pairs
@@ -191,16 +199,18 @@ def findUniquePairs(a):
     num_of_each = cts
     return uniquePairs,num_of_each
 
+
 def addOnesColumn(X):
     # add a row of ones at the beginning of a np array for a regression
-    if np.ndim(X)==1: # if a single column
-        X = np.vstack((np.ones(len(X)),X)).T
+    if np.ndim(X) == 1:  # if a single column
+        X = np.vstack((np.ones(len(X)), X)).T
     else:
-        X = np.hstack((np.ones(len(X))[:,np.newaxis],X))
+        X = np.hstack((np.ones(len(X))[:, np.newaxis], X))
     return X
 
+
 def fileDeleter(path,partial_name):
-    import os,glob
+    import os, glob
     for filename in glob.glob(path+partial_name+"*"):        
         os.remove(filename)
 '''
@@ -209,6 +219,7 @@ fileDeleter("/home1/john/thetaBurst/code/","sge_engine")
 fileDeleter("/home1/john/thetaBurst/code/","sge_controller")
 fileDeleter("/home1/john/thetaBurst/code/","bcbio-e")
 '''
+
 
 def getLogicalChunks(array):
     # find start and end indices for chunks of values >0 in an array
@@ -228,7 +239,7 @@ def getLogicalChunks(array):
                 foundend = True
                 endindex = i - 1
         # for last point
-        if i==(len(array)-1):
+        if i == (len(array)-1):
             if foundstart:
                 starts.append(startindex)
                 if array[i] == 1:
@@ -244,6 +255,7 @@ def getLogicalChunks(array):
             startindex = 0
             endindex = 0  
     return starts,ends
+
 
 def bootstrap(data, bootnum=100, samples=None, bootfunc=None):
     """Performs bootstrap resampling on numpy arrays.
@@ -343,6 +355,7 @@ def bootstrap(data, bootnum=100, samples=None, bootfunc=None):
             boot[i] = bootfunc(data[bootarr])
 
     return boot
+
 
 def bar_plot(ax, data, colors=None, total_width=0.8, single_width=1, legend=True):
     """Draws a bar plot with multiple bars per data point.
