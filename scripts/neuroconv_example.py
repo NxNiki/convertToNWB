@@ -5,8 +5,11 @@ from pathlib import Path
 from neuroconv.datainterfaces import NeuralynxRecordingInterface
 
 
-ECEPHY_DATA_PATH = "/Users/XinNiuAdmin/Documents/NWBTest"
+ECEPHY_DATA_PATH = "/Users/XinNiuAdmin/Documents/NWBTest/single_file"
 OUTPUT_PATH = f"{ECEPHY_DATA_PATH}/output"
+
+# ECEPHY_DATA_PATH = '/Users/XinNiuAdmin/Documents/NWBTest/D550/EXP1_Screening/2022-03-10_13-34-18'
+# OUTPUT_PATH = f"{ECEPHY_DATA_PATH}_output"
 
 path_to_save_nwbfile = f"{OUTPUT_PATH}/test_nwb.nwb"
 if not os.path.exists(OUTPUT_PATH):

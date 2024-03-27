@@ -3,6 +3,7 @@ name = "convert Neuralynx to NWB"
 version = "0.1.0"
 description = "convert electrophsiology data (neuralyx and blackrock) to NWB format"
 authors = ["Xin Niu <michaelniki1988@gmail.com>"]
+package-mode = false
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -19,8 +20,10 @@ packaging = "^24.0"
 spikeinterface = "^0.100.1"
 jupyterlab = "^4.1.0"
 python-dateutil = "^2.9.0"
-# neo = "^0.13.0"
-neo = { git = "git@github.com:NxNiki/python-neo.git", branch = "multiple_filenames" }
+neo = "^0.13.0"
+#neo = { git = "git@github.com:NxNiki/python-neo.git", branch = "multiple_filenames" }
+seaborn = "^0.13.0"
+astropy = "^6.0.1"
 
 [tool.pre-commit]
 version = "2.13.0"
